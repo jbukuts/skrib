@@ -1,0 +1,13 @@
+.keyBind {
+  align-items: center;
+
+  & > div {
+    border: 2px solid get-color('accent');
+    background-color: get-color(gray-6);
+    padding: 0.5rem 0.65rem;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono Variable';
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+}

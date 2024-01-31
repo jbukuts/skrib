@@ -1,0 +1,63 @@
+@mixin apply-to-track() {
+  &::-webkit-slider-runnable-track {
+    @content;
+  }
+
+  /******** Firefox ********/
+  &::-moz-range-track {
+    @content;
+  }
+}
+
+@mixin apply-to-thumb() {
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    @content;
+  }
+
+  &::-moz-range-thumb {
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: 0; /*Removes default border-radius that FF applies*/
+    @content;
+  }
+}
+
+.slider {
+  display: flex;
+  min-width: 100px;
+
+  & > input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 150px;
+    min-height: 15px;
+    height: auto;
+    flex: 1;
+
+    @include apply-to-track() {
+      background-color: rgba(0, 0, 0, 0.075);
+      border-radius: 5px;
+      height: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+    }
+
+    @include apply-to-thumb() {
+      // rgb(215, 201, 5);
+      background-color: rgb(145, 145, 145);
+      height: inherit;
+      width: 0.75rem;
+      border-radius: 5px;
+    }
+  }
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.horizontal {
+  flex-direction: row;
+}

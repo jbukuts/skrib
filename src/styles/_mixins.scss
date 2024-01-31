@@ -1,0 +1,16 @@
+@use 'sass:map';
+
+$directions: (
+  'vertical': 'column',
+  'horizontal': 'row'
+);
+
+@mixin stack($dir: 'vertical', $reverse: false) {
+  $r: '';
+  @if $reverse {
+    $r: '-reverse';
+  }
+
+  display: flex;
+  flex-direction: #{map.get($directions, $dir)}#{$r};
+}

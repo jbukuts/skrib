@@ -1,0 +1,41 @@
+.preview {
+  padding: 1.25rem;
+
+  background-color: get-color('background');
+  color: get-color('foreground');
+
+  & h1:first-child {
+    margin-top: 0;
+  }
+
+  & h1 {
+    margin: 0;
+  }
+
+  & h2 {
+    margin-top: 0.75em;
+    margin-bottom: 0.5em;
+  }
+
+  & h3 {
+    margin-top: 0.75em;
+    margin-bottom: 0.45em;
+  }
+
+  & h4 {
+    margin-top: 0.5em;
+    margin-bottom: 0.375em;
+  }
+
+  & h5 {
+    margin: 0;
+  }
+
+  & h6 {
+    margin: 0;
+  }
+
+  & p {
+    margin: 0;
+  }
+}

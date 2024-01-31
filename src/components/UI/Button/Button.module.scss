@@ -1,0 +1,39 @@
+$overlay-opac: 0.175;
+$overlay-grad: linear-gradient(rgba(255, 255, 255, $overlay-opac), rgba(0, 0, 0, $overlay-opac));
+
+.wrapper {
+}
+
+.button {
+  position: relative;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.175);
+  overflow: hidden;
+  padding: 0.475rem 0.575rem;
+  transition: box-shadow 100ms ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 10px get-color('foreground', 0.475);
+  }
+}
+
+.mono {
+  background: $overlay-grad, get-color('accent');
+  color: get-color('foreground');
+}
+
+.submit {
+  background: $overlay-grad, get-color('blue');
+  color: get-color('white');
+}
+
+.danger {
+  background: $overlay-grad, get-color('red');
+  color: get-color('white');
+}
+
+.success {
+  background: $overlay-grad, get-color('green');
+  color: get-color('white');
+}

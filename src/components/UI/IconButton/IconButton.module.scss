@@ -1,0 +1,36 @@
+.iconButton {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+  transition: opacity 80ms ease-in-out;
+
+  & > svg {
+    fill: get-color('foreground');
+    transition: filter 80ms ease-in-out;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+
+    &:hover {
+      cursor: unset;
+
+      & > svg {
+        filter: none;
+      }
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    & > svg {
+      filter: drop-shadow(0px 0px 5px get-color('foreground', 0.5));
+    }
+  }
+}

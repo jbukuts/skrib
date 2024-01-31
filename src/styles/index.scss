@@ -1,0 +1,73 @@
+@use 'fonts';
+
+:root {
+  font-family: system-ui, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  // color-scheme: light dark;
+  // color: rgba(255, 255, 255, 0.87);
+  // background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@include provide-theme-tokens();
+
+$bg-color: rgba(248, 240, 34, 0.6);
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100vh;
+  height: auto;
+  width: 100vw;
+  background-color: get-color('background');
+}
+
+html {
+  // background: linear-gradient(0deg, get-color('background', 0.975), get-color('background', 0.975)),
+  //   url('./paper.png');
+  background-size: auto;
+  background-blend-mode: luminosity;
+  background-repeat: repeat;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+  height: auto;
+  width: inherit;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hide-me {
+  display: none;
+  pointer-events: none;
+}
+
+// @media (prefers-color-scheme: light) {
+//   :root {
+//     color: #213547;
+//     background-color: #ffffff;
+//   }
+//   a:hover {
+//     color: #747bff;
+//   }
+//   button {
+//     background-color: #f9f9f9;
+//   }
+// }

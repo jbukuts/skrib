@@ -1,0 +1,96 @@
+$thumb-size: 1.25rem;
+$track-color: get-color('gray-1');
+$thumb-color: get-color('gray-1');
+$track-border-radius: 6px;
+$track-height: 4px;
+
+.wrapper {
+  width: 100%;
+}
+
+.root {
+  color: $thumb-color;
+  height: $track-height;
+  width: 100%;
+  padding: calc($thumb-size / 2) 0;
+  display: inline-flex;
+  align-items: center;
+  justify-items: center;
+  cursor: pointer;
+  position: relative;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    & .thumb {
+      opacity: 1;
+    }
+  }
+}
+
+.rail {
+  background-color: $track-color;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: $track-height;
+  border-radius: $track-border-radius;
+  opacity: 0.3;
+}
+
+.track {
+  display: block;
+  position: absolute;
+  height: $track-height;
+  border-radius: $track-border-radius;
+  background-color: $track-color;
+}
+
+.thumb {
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  margin-left: calc(-1 * $thumb-size / 8);
+  width: calc($thumb-size / 4);
+  height: $thumb-size;
+  box-sizing: border-box;
+  // border-radius: 50%;
+  outline: 0;
+  background-color: $thumb-color;
+  transition-property: box-shadow, transform, opacity;
+  transition-timing-function: ease;
+  transition-duration: 120ms;
+  transform-origin: center;
+
+  &:global(.base--focusVisible) {
+    opacity: 1;
+  }
+
+  &:global(.base--active) {
+    transform: scale(1.2);
+  }
+}
+
+.mark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 99%;
+  background-color: $track-color;
+  transform: translateX(-50%);
+  // margin: 0 calc($thumb-size / 2);
+}
+
+.markLabel {
+}
+
+.valueLabel {
+  font-weight: 600;
+  font-size: 12px;
+  position: relative;
+  top: 2em;
+  text-align: center;
+  align-self: center;
+}

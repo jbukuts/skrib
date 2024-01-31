@@ -1,0 +1,20 @@
+.topBar {
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: get-color('background');
+  color: get-color('foreground');
+  width: inherit;
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  border-bottom: 2px solid get-color('accent');
+
+  & > p {
+    margin: 0;
+    font-weight: bold;
+    font-family: 'JetBrains Mono Variable';
+  }
+}

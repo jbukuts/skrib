@@ -1,0 +1,138 @@
+@use 'sass:map';
+@use 'sass:color';
+@use 'sass:meta';
+
+$theme: 'dark' !default;
+
+$themes-colors: (
+  monokai: (
+    // text
+    'background': rgb(46, 46, 46),
+    'foreground': rgb(214, 214, 214),
+    'accent': rgb(121, 121, 121),
+    // rainbow
+    'red': rgb(176, 82, 121),
+    'orange': rgb(232, 125, 62),
+    'yellow': rgb(229, 181, 103),
+    'green': rgb(180, 210, 115),
+    'mint': rgb(108, 153, 187),
+    'teal': rgb(108, 153, 187),
+    'cyan': rgb(108, 153, 187),
+    'blue': rgb(108, 153, 187),
+    'indigo': rgb(108, 153, 187),
+    'purple': rgb(158, 134, 200),
+    'pink': rgb(176, 82, 121),
+    'brown': rgb(172, 142, 104),
+    // TODO: BAD COLORS
+    'gray-0': rgb(70, 70, 70),
+    'gray-1': rgb(142, 142, 147),
+    'gray-2': rgb(174, 174, 178),
+    'gray-3': rgb(199, 199, 204),
+    'gray-4': rgb(209, 209, 214),
+    'gray-5': rgb(229, 229, 234),
+    'gray-6': rgb(242, 242, 247)
+  ),
+  light: (
+    // text
+    'background': rgb(255, 255, 255),
+    'accent': rgb(222, 222, 222),
+    'foreground': rgb(0, 0, 0),
+    'outline': rgb(149, 149, 149),
+    // rainbow
+    'red': rgb(255, 59, 48),
+    'orange': rgb(255, 149, 0),
+    'yellow': rgb(255, 204, 0),
+    'green': rgb(40, 205, 65),
+    'mint': rgb(0, 199, 190),
+    'teal': rgb(89, 173, 196),
+    'cyan': rgb(85, 190, 240),
+    'blue': rgb(0, 122, 255),
+    'indigo': rgb(88, 86, 214),
+    'purple': rgb(175, 82, 222),
+    'pink': rgb(255, 45, 85),
+    'brown': rgb(162, 132, 92),
+    // grays
+    'white': rgb(255, 255, 255),
+    'black': rgb(0, 0, 0),
+    'gray-0': rgb(70, 70, 70),
+    'gray-1': rgb(142, 142, 147),
+    'gray-2': rgb(174, 174, 178),
+    'gray-3': rgb(199, 199, 204),
+    'gray-4': rgb(209, 209, 214),
+    'gray-5': rgb(229, 229, 234),
+    'gray-6': rgb(242, 242, 247)
+  ),
+  dark: (
+    // 'background': rgb(6, 6, 8),
+    // 'foreground': rgb(220, 220, 225),
+    'background': rgb(21, 21, 21),
+    'foreground': rgb(215, 215, 215),
+    'accent': rgb(127, 127, 127),
+    'outline': rgb(88, 88, 88),
+    'red': rgb(255, 69, 58),
+    'orange': rgb(255, 159, 10),
+    'yellow': rgb(255, 214, 10),
+    'green': rgb(50, 215, 75),
+    'mint': rgb(102, 212, 207),
+    'teal': rgb(106, 196, 220),
+    'cyan': rgb(90, 200, 245),
+    'blue': rgb(10, 132, 255),
+    'indigo': rgb(94, 92, 230),
+    'purple': rgb(191, 90, 242),
+    'pink': rgb(255, 55, 95),
+    'brown': rgb(172, 142, 104),
+    'white': rgb(255, 255, 255),
+    'black': rgb(0, 0, 0),
+    'gray-0': rgb(207, 207, 207),
+    'gray-1': rgb(152, 152, 157),
+    'gray-2': rgb(99, 99, 102),
+    'gray-3': rgb(72, 72, 74),
+    'gray-4': rgb(58, 58, 60),
+    'gray-5': rgb(44, 44, 46),
+    'gray-6': rgb(28, 28, 30)
+  )
+);
+
+// helper to deep merge arbitrary map list
+@function map-collect($maps...) {
+  $collection: ();
+
+  @each $map in $maps {
+    $collection: map.deep-merge($collection, $map);
+  }
+  @return $collection;
+}
+
+@function split-color($c) {
+  @return '#{color.red($c)}, #{color.green($c)}, #{color.blue($c)}';
+}
+
+// provide all tokens by data attribute to selector
+@mixin provide-theme-tokens($selector: ':root') {
+  $themes-merged: $themes-colors;
+
+  // create css properties for each theme
+  @each $theme-name, $properties in $themes-merged {
+    #{$selector}[data-theme='#{$theme-name}'] {
+      // define a css variable for each property
+      @each $name, $property in $properties {
+        @if (meta.type-of($property) == 'color') {
+          --color-#{$name}: #{split-color($property)};
+        } @else {
+          --effect-#{$name}: #{$property};
+        }
+      }
+    }
+  }
+}
+
+// return the color from var or default configured
+@function get-color($name, $alpha: 1) {
+  $default-color: #{split-color(map.get($themes-colors, $theme, $name))};
+  @return rgba(var(--color-#{$name}, $default-color), $alpha);
+}
+
+@function get-prop($name) {
+  $default-effect: map.get($themes-effects, $theme, $name);
+  @return var(--effect-#{$name}, $default-effect);
+}
