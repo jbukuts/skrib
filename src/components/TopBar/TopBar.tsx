@@ -20,7 +20,7 @@ export default function TopBar() {
       </p>
       <Stack dir='horizontal' style={{ alignItems: 'center', gap: '1rem' }}>
         <PreviewButtons />
-        <IconButton icon={IoMdSettings} onClick={toggleSettings} />
+        <IconButton title='Show settings' icon={IoMdSettings} onClick={toggleSettings} />
       </Stack>
     </Stack>
   )

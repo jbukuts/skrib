@@ -41,6 +41,30 @@ export default defineConfig({
       '#styles': fileURLToPath(new URL('./src/styles', import.meta.url))
     }
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          '@codemirror': [
+            '@codemirror/autocomplete',
+            '@codemirror/commands',
+            '@codemirror/state',
+            '@codemirror/search',
+            '@codemirror/view',
+            '@codemirror/language-data',
+            '@codemirror/language'
+          ],
+          '@lezer': [
+            '@lezer/common',
+            '@lezer/python',
+            '@lezer/highlight',
+            '@lezer/cpp',
+            '@lezer/rust'
+          ]
+        }
+      }
+    }
+  },
   css: {
     preprocessorOptions: {
       scss: {

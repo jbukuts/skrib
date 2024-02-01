@@ -16,11 +16,13 @@ export default function PreviewButtons() {
   return (
     <Stack>
       <IconButton
+        title='Show Markdown view'
         size={ICON_SIZE}
         className={cx(showPreview && styles.inactive)}
         icon={FaCode}
         onClick={() => setArb({ showPreview: false })}></IconButton>
       <IconButton
+        title='Show HTML view'
         size={ICON_SIZE}
         className={cx(!showPreview && styles.inactive)}
         icon={FaAlignLeft}

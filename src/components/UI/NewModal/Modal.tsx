@@ -28,6 +28,7 @@ export default function Modal(props: ModalProps) {
       <Stack dir='vertical' className={styles.contentWrapper}>
         {renderCloseButton && (
           <IconButton
+            title='Close settings'
             size={32}
             icon={IoIosClose}
             onClick={() => onClose({}, 'backdropClick')}

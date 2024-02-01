@@ -3,47 +3,16 @@ import { Suspense, lazy, useCallback, useEffect } from 'react'
 import { useDeepCompareEffect, useMount } from 'react-use'
 import { useShallow } from 'zustand/react/shallow'
 import { CodeMirrorEditor, KeyCommands, TopBar } from '@/components'
-import Settings from '@/components/Settings'
-import { NewModal } from '@/components/UI'
-import useEditorStateStore from './store/editor-state'
-import useSettingsStore, { DEF_SETTINGS, SettingsState } from './store/settings'
+import { DEF_TEXT } from '@/constants'
+import useEditorStateStore from '@/store/editor-state'
+import useSettingsStore, { DEF_SETTINGS, SettingsState } from '@/store/settings'
 import '#styles/App.scss'
 import '#styles/themes/ascetic.css'
 
+const Settings = lazy(() => import('@/components/Settings'))
+const NewModal = lazy(() => import('@/components/UI/NewModal'))
 const Preview = lazy(() => import('@/components/Preview'))
 const FirstTime = lazy(() => import('@/components/FirstTime'))
-
-const DEF_TEXT = `
-# Lorem ipsum
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lobortis vitae justo id dapibus. 
-Vivamus varius ut turpis a lobortis. Sed cursus consectetur elementum. Aliquam consequat nec mauris a placerat. 
-Curabitur sagittis erat sed tellus fermentum consectetur. 
-Vestibulum dapibus nulla a leo ornare, vel convallis tortor sagittis. 
-
-## Vivamus varius
-
-Vivamus varius hendrerit massa et **_fringilla_**.
-In tempor varius eros, at feugiat felis mattis eu. 
-Ut consequat malesuada arcu sed laoreet. Mauris porta pretium lacus, in egestas eros lobortis vel. 
-Suspendisse quis nisi dictum, tincidunt nisi quis, posuere orci.
-
-Suspendisse **ante** risus, semper quis commodo eleifend, lobortis id diam. 
-Curabitur id auctor augue. Donec risus nisi, vulputate in tellus nec, iaculis vestibulum velit.
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
-In eleifend ligula non ligula iaculis, sed congue lorem suscipit. 
-
-- Integer convallis molestie iaculis. 
-- Fusce felis mauris, imperdiet in porta eu, viverra vel nibh. 
-- Praesent suscipit sed eros et feugiat. 
-
-> Aliquam nec ornare lacus. Nam id pharetra nibh, sed tincidunt ex.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lobortis vitae justo id dapibus. 
-Vivamus varius ut turpis a lobortis. Sed cursus consectetur elementum. Aliquam consequat nec mauris a placerat. 
-Curabitur sagittis erat sed tellus fermentum consectetur. 
-Vestibulum dapibus nulla a leo ornare, vel convallis tortor sagittis. 
-`.trim()
 
 function App() {
   // persistent user settings
@@ -56,7 +25,9 @@ function App() {
         showLineCount: s.showLineCount,
         showInfoPanel: s.showInfoPanel,
         variableHeadings: s.variableHeadings,
-        theme: s.theme
+        theme: s.theme,
+        smoothCursorBlink: s.smoothCursorBlink,
+        smoothCursorMove: s.smoothCursorMove
       } as SettingsState,
       setArbitrary: s.setArbitrary
     }))
@@ -132,6 +103,8 @@ function App() {
         fontFamily={settings.fontFace}
         showInfoPanel={settings.showInfoPanel}
         variableHeadingSize={settings.variableHeadings}
+        smoothCursorBlink={settings.smoothCursorBlink}
+        smoothCursorMove={settings.smoothCursorMove}
       />
       <Suspense fallback={null}>
         <Preview
@@ -139,23 +112,25 @@ function App() {
           fontSize={settings.fontSize}
           rawText={localText}></Preview>
       </Suspense>
+      <Suspense fallback={null}>
+        <NewModal
+          title='Settings'
+          open={showSettings}
+          onClose={() => setArbitraryEditorState({ showSettings: false })}>
+          <Settings />
+        </NewModal>
+      </Suspense>
       {firstVisit && (
         <Suspense fallback={null}>
           <NewModal
             title='Welcome to skrib!'
             open={firstVisit}
             onClose={() => setFirstVisit(false)}>
-            <FirstTime></FirstTime>
+            <FirstTime />
           </NewModal>
         </Suspense>
       )}
-      <NewModal
-        title='Settings'
-        open={showSettings}
-        onClose={() => setArbitraryEditorState({ showSettings: false })}>
-        <Settings />
-      </NewModal>
-      <KeyCommands></KeyCommands>
+      <KeyCommands />
     </>
   )
 }

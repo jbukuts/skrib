@@ -20,6 +20,8 @@ export interface SettingsState {
   showLineCount: boolean
   showInfoPanel: boolean
   variableHeadings: boolean
+  smoothCursorBlink: boolean
+  smoothCursorMove: boolean
 }
 
 interface SettingsMutate {
@@ -36,6 +38,8 @@ interface SettingsMutate {
   toggleLineCount: () => void
   toggleVariableHeadings: () => void
   setTheme: (_t: Theme) => void
+  toggleSmoothCursorBlink: () => void
+  toggleSmoothCursorMove: () => void
 }
 
 export const DEF_SETTINGS: SettingsState = {
@@ -45,7 +49,9 @@ export const DEF_SETTINGS: SettingsState = {
   theme: 'light',
   showLineCount: true,
   showInfoPanel: true,
-  variableHeadings: false
+  variableHeadings: false,
+  smoothCursorBlink: false,
+  smoothCursorMove: false
 }
 
 export const RANGE_LINE_HEIGHT = [1, 2]
@@ -69,6 +75,8 @@ const useSettingsStore = create<SettingsState & SettingsMutate>((set) => ({
   toggleLineCount: () => set((s) => ({ showLineCount: !s.showLineCount })),
   toggleInfoPanel: () => set((s) => ({ showInfoPanel: !s.showInfoPanel })),
   toggleVariableHeadings: () => set((s) => ({ variableHeadings: !s.variableHeadings })),
+  toggleSmoothCursorBlink: () => set((s) => ({ smoothCursorBlink: !s.smoothCursorBlink })),
+  toggleSmoothCursorMove: () => set((s) => ({ smoothCursorMove: !s.smoothCursorMove })),
   setArbitrary: (s: Partial<SettingsState>) => set(s),
   setTheme: (t: Theme) => set({ theme: t }),
   resetAll: () => set(DEF_SETTINGS)

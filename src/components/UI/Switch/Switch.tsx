@@ -4,12 +4,7 @@ import cx from 'classnames'
 import { Stack } from '../Layout'
 import styles from './Switch.module.scss'
 
-type InheritedProps = Pick<
-  SwitchOwnProps,
-  'checked' | 'disabled' | 'onChange' | 'defaultChecked' | 'className'
->
-
-interface SwitchProps extends InheritedProps {
+interface SwitchProps extends Omit<SwitchOwnProps, 'slots' | 'slotProps'> {
   title?: string
   direction?: 'horizontal' | 'vertical'
 }
@@ -22,7 +17,8 @@ export default function Switch(props: SwitchProps) {
     onChange,
     disabled = false,
     checked,
-    defaultChecked
+    defaultChecked,
+    ...rest
   } = props
 
   const wrapperClass = cx(styles.wrapper, styles[direction], className)
@@ -31,6 +27,7 @@ export default function Switch(props: SwitchProps) {
     <Stack dir={direction} as='label' className={wrapperClass}>
       {title}
       <MUISwitch
+        tabIndex={0}
         disabled={disabled}
         defaultChecked={defaultChecked}
         checked={checked}
@@ -41,6 +38,7 @@ export default function Switch(props: SwitchProps) {
           thumb: { className: styles.thumb },
           input: { className: styles.input }
         }}
+        {...rest}
       />
     </Stack>
   )

@@ -1,14 +1,16 @@
-import { Grid, Stack } from '@/components/UI/Layout'
 import {
+  CursorBlinkSwitch,
+  CursorMoveSwitch,
   FontFaceSelect,
   FontSizeSlider,
   LineHeightSlider,
   LineNumberSwitch,
+  ResetButton,
   StatisticsSwitch,
   ThemeSelect,
   VariableHeadSwitch
-} from '../DerivedUI'
-import ResetButton from '../DerivedUI/ResetButton'
+} from '@/components/DerivedUI'
+import { Grid, Stack } from '@/components/UI/Layout'
 import styles from './Settings.module.scss'
 
 export default function Settings() {
@@ -18,9 +20,11 @@ export default function Settings() {
       <FontFaceSelect />
       <FontSizeSlider />
       <LineHeightSlider />
-      <Grid col={2} row={1} spacing='lg'>
+      <Grid col={2} row={3} spacing='lg'>
         <StatisticsSwitch />
         <LineNumberSwitch />
+        <CursorBlinkSwitch />
+        <CursorMoveSwitch />
         <VariableHeadSwitch />
       </Grid>
       <ResetButton></ResetButton>

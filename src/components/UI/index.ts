@@ -2,6 +2,7 @@ import Button from './Button'
 import CheckBox from './CheckBox/CheckBox'
 import DropDown from './DropDown'
 import IconButton from './IconButton'
+import Input from './Input'
 import Modal from './Modal'
 import NewModal from './NewModal'
 import NewSlider from './NewSlider'
@@ -19,5 +20,6 @@ export {
   Switch,
   NewSlider,
   Select,
-  NewModal
+  NewModal,
+  Input
 }

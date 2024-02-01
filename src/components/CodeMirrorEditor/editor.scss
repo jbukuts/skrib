@@ -1,3 +1,14 @@
+@keyframes caretAnim {
+  0% {
+    // scale: 1;
+    opacity: 1;
+  }
+  100% {
+    // scale: 0.8;
+    opacity: 0;
+  }
+}
+
 .cm-editor {
   height: 100%;
   position: relative;
@@ -20,6 +31,7 @@
   }
 
   &.cm-focused {
+    // caret styling
     & .cm-cursor {
       border-left-color: get-color('foreground');
     }

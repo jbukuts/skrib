@@ -25,6 +25,9 @@ interface CodeMirrorEditorProps {
   fontFamily?: string
   showInfoPanel?: boolean
   variableHeadingSize?: boolean
+  smoothCursorBlink?: boolean
+  smoothCursorMove?: boolean
+  cursorStyle?: 'line' | 'block' | 'underline'
 }
 
 // baseline editor styling
@@ -74,7 +77,6 @@ const VARIABLE_HEADING_HIGHLIGHTER = syntaxHighlighting(
 const HIGHLIGHTER = syntaxHighlighting(
   HighlightStyle.define([
     { tag: tags.heading, ...headingStyle },
-
     { tag: tags.strong, fontWeight: 700 },
     { tag: tags.emphasis, fontStyle: 'italic' },
     { tag: tags.strikethrough, textDecoration: 'line-through' },
@@ -85,6 +87,24 @@ const HIGHLIGHTER = syntaxHighlighting(
     { tag: tags.bracket, color: 'purple' }
   ])
 )
+
+const SMOOTH_CURSOR_BLINK = EditorView.theme({
+  '&.cm-focused .cm-cursorLayer': {
+    animation: 'none !important'
+  },
+  '&.cm-focused .cm-cursor': {
+    animation: '1200ms ease-in-out infinite alternate cm-blink !important'
+  }
+})
+
+const SMOOTH_CURSOR_MOVE = EditorView.theme({
+  '&.cm-focused .cm-cursor': {
+    borderLeftColor: getColor('foreground'),
+    transitionProperty: 'left, right, top',
+    transitionDuration: '50ms',
+    transitionTimeFunction: 'linear'
+  }
+})
 
 export default function CodeMirrorEditor(props: CodeMirrorEditorProps) {
   const {
@@ -98,7 +118,9 @@ export default function CodeMirrorEditor(props: CodeMirrorEditorProps) {
     fontSize = 18,
     fontFamily = 'serif',
     showInfoPanel = true,
-    variableHeadingSize = true
+    variableHeadingSize = true,
+    smoothCursorBlink = false,
+    smoothCursorMove = false
   } = props
 
   const appliedTheme = EditorView.theme({
@@ -117,6 +139,7 @@ export default function CodeMirrorEditor(props: CodeMirrorEditorProps) {
       foldGutter: false
     },
     extensions: [
+      EditorView.contentAttributes.of({ id: 'skrib-editor', 'aria-label': 'skrib-editor' }),
       DEF_EDITOR_THEME,
       appliedTheme,
       showPanel.of(showInfoPanel ? wordCountPanel : null),
@@ -132,6 +155,8 @@ export default function CodeMirrorEditor(props: CodeMirrorEditorProps) {
       markdown({ base: markdownLanguage, codeLanguages: languages }),
       HIGHLIGHTER,
       ...(variableHeadingSize ? [VARIABLE_HEADING_HIGHLIGHTER] : []),
+      ...(smoothCursorBlink ? [SMOOTH_CURSOR_BLINK] : []),
+      ...(smoothCursorMove ? [SMOOTH_CURSOR_MOVE] : []),
       EditorView.lineWrapping
     ],
     value: code,
