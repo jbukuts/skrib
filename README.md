@@ -1,30 +1,62 @@
 # skrib
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A customizable markdown editor for the browser.
 
-Currently, two official plugins are available:
+Built using:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- CodeMirror
+- Marked
 
-## Expanding the ESLint configuration
+## Getting started locally
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+First install dependencies via:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname
-  }
-}
+```bash
+npm ci
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Then start the local dev server with:
+
+```bash
+npm run dev
+```
+
+And wallah! Navigate to http://localhost:5173 to see the application.
+
+## Create a production build
+
+To create a production build ensure dependencies are installed as noted above. Then simply run:
+
+```bash
+npm run build
+```
+
+After this, the static asset composing the site should be stored in the `./dist` folder. To host them quickly use:
+
+```bash
+npm run preview
+```
+
+And then navigate to http://localhost:4173.
+
+## Deployment
+
+Deployment is handled automagically via Vercel. See `vercel.json` for configuration details within Vercel.
+
+## Other useful stuff
+
+Below are some other useful scripts for development:
+
+- `npm run analyze`: Run the vite bundle analyzer and launch the webpage with the results
+- `npm run generate-assets`: Generates assets for PWA using `pwa-assets-generator`
+- `npm run lint`: Lint source code via `eslint`
+
+## Useful documentation
+
+Links to documentation of the various technologies that make this possible:
+
+- CodeMirror: https://codemirror.net/
+- FileSystem Web API: https://developer.mozilla.org/en-US/docs/Web/API/FileSystem
+- Marked: https://github.com/markedjs/marked
+- Vercel Project Config: https://vercel.com/docs/projects/project-configuration
