@@ -46,7 +46,7 @@ const DEF_EDITOR_THEME = EditorView.theme({
     position: 'sticky',
     bottom: '0px',
     borderTop: 'none',
-    backdropFilter: 'blur(10px)',
+    // backdropFilter: 'blur(10px)',
     padding: '0.25rem 0.5em',
     fontSize: '.875em'
   },
