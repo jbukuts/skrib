@@ -85,8 +85,6 @@ function App() {
       )
       metaElement[0].setAttribute('content', `rgb(${themeColor})`)
     }
-
-    console.log(metaElement)
   }, [settings.theme])
 
   // on mount change store settings to match local storage
