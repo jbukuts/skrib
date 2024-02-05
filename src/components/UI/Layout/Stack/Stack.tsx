@@ -7,7 +7,7 @@ interface StackProps extends React.HTMLAttributes<HTMLElement> {
   className?: string
   children: React.ReactNode
   reverse?: boolean
-  spacing?: 'xs' | 'sm' | 'md' | 'lg'
+  spacing?: 'xs' | 'sm' | 'md' | 'lg' | 'none'
   as?: keyof React.ReactHTML
 }
 

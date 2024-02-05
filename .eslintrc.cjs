@@ -32,7 +32,8 @@ module.exports = {
     ],
     indent: ['error', 2],
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
-    'no-unused-vars': [
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
       'error',
       { destructuredArrayIgnorePattern: '^_', argsIgnorePattern: '^_' }
     ],
