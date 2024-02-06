@@ -139,7 +139,13 @@ export default function CodeMirrorEditor(props: CodeMirrorEditorProps) {
       foldGutter: false
     },
     extensions: [
-      EditorView.contentAttributes.of({ id: 'skrib-editor', 'aria-label': 'skrib-editor' }),
+      EditorView.contentAttributes.of({
+        id: 'skrib-editor',
+        'aria-label': 'skrib-editor',
+        'data-gram': 'false',
+        'data-gram_editor': 'false',
+        'data-enable-grammarly': 'false'
+      }),
       DEF_EDITOR_THEME,
       appliedTheme,
       showPanel.of(showInfoPanel ? wordCountPanel : null),
