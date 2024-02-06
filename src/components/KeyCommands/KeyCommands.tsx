@@ -41,8 +41,12 @@ const handleSaveFile: keyboardJs.Callback = async (e) => {
 }
 
 export default function KeyCommands() {
-  const { toggleSettings, togglePreview } = useEditorStateStore(
-    useShallow((s) => ({ toggleSettings: s.toggleSettings, togglePreview: s.togglePreview }))
+  const { toggleSettings, togglePreview, toggleFileView } = useEditorStateStore(
+    useShallow((s) => ({
+      toggleSettings: s.toggleSettings,
+      togglePreview: s.togglePreview,
+      toggleFileView: s.toggleFileView
+    }))
   )
 
   const { toggleLineNumbers } = useSettingsStore(
@@ -52,7 +56,11 @@ export default function KeyCommands() {
   )
 
   // define keybind actions
-  useKeyboardJsToggle('ctrl + b', togglePreview)
+  useKeyboardJsToggle('ctrl + b', toggleFileView)
+  useKeyboardJsToggle('ctrl + d', (e) => {
+    e?.preventDefault()
+    togglePreview()
+  })
   useKeyboardJsToggle('ctrl + m', toggleSettings)
   useKeyboardJsToggle('ctrl + l', (e) => {
     e?.preventDefault()

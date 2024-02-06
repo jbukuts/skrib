@@ -37,11 +37,12 @@ function App() {
   )
 
   // transient editor state
-  const { showSettings, showPreview, setArbitraryEditorState } = useEditorStateStore(
+  const { showSettings, showPreview, fileView, setArbitraryEditorState } = useEditorStateStore(
     useShallow((s) => ({
       showSettings: s.showSettings,
       setArbitraryEditorState: s.setArbitrary,
-      showPreview: s.showPreview
+      showPreview: s.showPreview,
+      fileView: s.fileView
     }))
   )
 
@@ -153,7 +154,7 @@ function App() {
     <>
       <TopBar />
       <Stack spacing='none' style={{ width: '100vw', flex: '1' }}>
-        <FileViewer></FileViewer>
+        {fileView && <FileViewer />}
         <CodeMirrorEditor
           className={showPreview ? 'hide-me' : ''}
           code={localText}
