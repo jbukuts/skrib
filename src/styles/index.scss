@@ -21,6 +21,7 @@ $bg-color: rgba(248, 240, 34, 0.6);
 
 * {
   box-sizing: border-box;
+  overscroll-behavior-y: none;
 }
 
 html,

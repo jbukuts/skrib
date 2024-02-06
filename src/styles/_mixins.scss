@@ -14,3 +14,8 @@ $directions: (
   display: flex;
   flex-direction: #{map.get($directions, $dir)}#{$r};
 }
+
+@mixin cross-backdrop-filter($filters) {
+     -webkit-backdrop-filter: $filters;
+     backdrop-filter: $filters;
+}
