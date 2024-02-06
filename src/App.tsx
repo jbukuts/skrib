@@ -118,6 +118,15 @@ function App() {
     setArbitrary(localSettings)
   })
 
+  // handle theme changes
+  useEffect(() => {
+    const html: HTMLElement = document.getElementsByTagName('html')[0]
+    html.setAttribute('data-theme', settings.theme)
+
+    // TODO: Bad way to do this dont like it
+    html.style.colorScheme = settings.theme
+  }, [settings.theme])
+
   // update settings in local storage
   useDeepCompareEffect(() => {
     setLocalSettings(settings)
