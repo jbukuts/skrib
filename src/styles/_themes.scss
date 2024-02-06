@@ -108,7 +108,7 @@ $themes-colors: (
 }
 
 // provide all tokens by data attribute to selector
-@mixin provide-theme-tokens($selector: ':root') {
+@mixin provide-theme-tokens($selector: ':root', $additional-tokens: ()) {
   $themes-merged: $themes-colors;
 
   // create css properties for each theme
@@ -121,6 +121,10 @@ $themes-colors: (
         } @else {
           --effect-#{$name}: #{$property};
         }
+      }
+
+      @each $token-name, $token-color in $additional-tokens {
+        #{$token-name}: map.get($themes-merged, $theme-name, $token-color);
       }
     }
   }

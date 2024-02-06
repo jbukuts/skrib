@@ -1,0 +1,28 @@
+.fileViewer {
+  justify-content: space-between;
+
+  min-width: 100px;
+  height: calc(100vh - $header-height) !important;
+  background-color: get-color('gray-6');
+  position: sticky;
+  top: $header-height;
+}
+
+.handle {
+  background-color: get-color('accent');
+  height: 100%;
+  width: 2px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: width 100ms ease-in-out;
+
+  &:hover {
+    cursor: e-resize;
+    width: 6px;
+  }
+}
+
+.fileViewMenu {
+  padding: 0.5rem;
+}

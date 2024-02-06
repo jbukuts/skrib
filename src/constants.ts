@@ -30,4 +30,11 @@ Curabitur sagittis erat sed tellus fermentum consectetur.
 Vestibulum dapibus nulla a leo ornare, vel convallis tortor sagittis. 
 `.trim()
 
-export { DEF_TEXT }
+const LOCAL_STORAGE_MAP = {
+  currentFile: 'current_file',
+  localText: 'file',
+  userSettings: 'settings',
+  firstTime: 'first_time'
+}
+
+export { DEF_TEXT, LOCAL_STORAGE_MAP }

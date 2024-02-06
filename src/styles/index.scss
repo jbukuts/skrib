@@ -1,5 +1,18 @@
 @use 'fonts';
 
+// needed for context menu theming
+$additional-tokens: (
+  --contexify-menu-bgColor: 'gray-6',
+  --contexify-separator-color: 'accent',
+  --contexify-item-color: 'foreground',
+  --contexify-activeItem-color: 'foreground',
+  --contexify-activeItem-bgColor: 'gray-5',
+  --contexify-rightSlot-color: 'foreground',
+  --contexify-activeRightSlot-color: 'foreground',
+  --contexify-arrow-color: 'foreground',
+  --contexify-activeArrow-color: 'foreground'
+);
+
 :root {
   font-family: system-ui, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -15,7 +28,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@include provide-theme-tokens();
+@include provide-theme-tokens(':root', $additional-tokens);
 
 $bg-color: rgba(248, 240, 34, 0.6);
 

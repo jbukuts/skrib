@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@uidotdev/usehooks'
+import { useDebounce, useLocalStorage } from '@uidotdev/usehooks'
 import { Suspense, lazy, useCallback, useEffect } from 'react'
 import { useDeepCompareEffect, useMount } from 'react-use'
 import { useShallow } from 'zustand/react/shallow'
@@ -8,6 +8,9 @@ import useEditorStateStore from '@/store/editor-state'
 import useSettingsStore, { DEF_SETTINGS, SettingsState } from '@/store/settings'
 import '#styles/App.scss'
 import '#styles/themes/ascetic.css'
+import FileViewer from './components/FileViewer/FileViewer'
+import { Stack } from './components/UI/Layout'
+import { useFileSystem } from './hooks'
 
 const Settings = lazy(() => import('@/components/Settings'))
 const NewModal = lazy(() => import('@/components/UI/NewModal'))
@@ -65,10 +68,49 @@ function App() {
   const [localSettings, setLocalSettings] = useLocalStorage<SettingsState>('settings', DEF_SETTINGS)
   const [localText, setLocalText] = useLocalStorage<string>('file', DEF_TEXT)
   const [firstVisit, setFirstVisit] = useLocalStorage<boolean>('firsttime', true)
+  const [currentFile, setCurrentFile] = useLocalStorage<string>('current_file')
+
+  const { getFileText, isReady, fileList, createFile, writeToFile } = useFileSystem()
+  const debounceText = useDebounce(localText, 500)
 
   const handleTextChange = useCallback((s: string) => {
     setLocalText(s)
   }, [])
+
+  // save file automatically
+  useEffect(() => {
+    if (!currentFile) return
+    const saveFile = async () => {
+      await writeToFile(currentFile, localText)
+      console.log('saved file!')
+    }
+
+    saveFile()
+  }, [debounceText])
+
+  // handle file changes
+  useEffect(() => {
+    console.log(currentFile)
+    getFileText(currentFile).then((t) => {
+      if (t === undefined) return
+      setLocalText(t)
+    })
+  }, [currentFile])
+
+  // handle initializing starting file
+  useEffect(() => {
+    if (!isReady || fileList.length > 0) return
+
+    const createStartingFile = async () => {
+      const startingFile = 'welcome'
+      console.info('Creating starting file!')
+      await createFile(startingFile)
+      await writeToFile(startingFile, localText)
+      setCurrentFile(startingFile)
+    }
+
+    createStartingFile()
+  }, [fileList, isReady])
 
   // ensure theme changes on html element
   useEffect(() => {
@@ -93,6 +135,15 @@ function App() {
     setArbitrary(localSettings)
   })
 
+  // handle theme changes
+  useEffect(() => {
+    const html: HTMLElement = document.getElementsByTagName('html')[0]
+    html.setAttribute('data-theme', settings.theme)
+
+    // TODO: Bad way to do this dont like it
+    html.style.colorScheme = settings.theme
+  }, [settings.theme])
+
   // update settings in local storage
   useDeepCompareEffect(() => {
     setLocalSettings(settings)
@@ -101,25 +152,29 @@ function App() {
   return (
     <>
       <TopBar />
-      <CodeMirrorEditor
-        className={showPreview ? 'hide-me' : ''}
-        code={localText}
-        onChange={handleTextChange}
-        lineNumbers={settings.showLineCount}
-        lineHeight={settings.lineHeight}
-        fontSize={settings.fontSize}
-        fontFamily={settings.fontFace}
-        showInfoPanel={settings.showInfoPanel}
-        variableHeadingSize={settings.variableHeadings}
-        smoothCursorBlink={settings.smoothCursorBlink}
-        smoothCursorMove={settings.smoothCursorMove}
-      />
-      <Suspense fallback={null}>
-        <Preview
-          className={!showPreview ? 'hide-me' : ''}
+      <Stack spacing='none' style={{ width: '100vw', flex: '1' }}>
+        <FileViewer></FileViewer>
+        <CodeMirrorEditor
+          className={showPreview ? 'hide-me' : ''}
+          code={localText}
+          onChange={handleTextChange}
+          lineNumbers={settings.showLineCount}
+          lineHeight={settings.lineHeight}
           fontSize={settings.fontSize}
-          rawText={localText}></Preview>
-      </Suspense>
+          fontFamily={settings.fontFace}
+          showInfoPanel={settings.showInfoPanel}
+          variableHeadingSize={settings.variableHeadings}
+          smoothCursorBlink={settings.smoothCursorBlink}
+          smoothCursorMove={settings.smoothCursorMove}
+        />
+        <Suspense fallback={null}>
+          <Preview
+            className={!showPreview ? 'hide-me' : ''}
+            fontSize={settings.fontSize}
+            rawText={localText}></Preview>
+        </Suspense>
+      </Stack>
+
       <Suspense fallback={null}>
         <NewModal
           title='Settings'

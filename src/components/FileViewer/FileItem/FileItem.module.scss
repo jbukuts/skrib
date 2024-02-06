@@ -1,0 +1,30 @@
+.fileItem {
+  padding: 0.375rem;
+  font-family: 'JetBrains Mono Variable';
+  font-size: 0.875rem;
+  overflow: hidden;
+
+  &.activeFile {
+    background-color: get-color('gray-5');
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: get-color('gray-5', 0.75);
+  }
+}
+
+.fileContextMenu {
+  --contexify-zIndex: 999999;
+  --contexify-menu-radius: 0;
+  --contexify-activeItem-radius: 0;
+  --contexify-menu-padding: 0;
+  --contexify-menu-shadow: none;
+  font-size: 0.875rem;
+
+  border: 2px solid get-color('accent');
+
+  & * {
+    z-index: 9999 !important;
+  }
+}

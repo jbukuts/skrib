@@ -63,7 +63,7 @@
     position: fixed !important;
     display: flex;
     flex-direction: row-reverse;
-    top: 42px !important;
+    top: $header-height !important;
     background-color: transparent;
     border-bottom: none;
     // border-bottom: 2px solid get-color('accent');
