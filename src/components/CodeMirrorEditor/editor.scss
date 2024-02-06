@@ -76,6 +76,7 @@
     background-color: get-color('background', 0.35);
     color: get-color('foreground');
     border-top: 2px solid get-color('accent');
+    @include cross-backdrop-filter(blur(5px))
   }
 
   &.cm-focused {

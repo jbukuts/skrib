@@ -102,7 +102,7 @@ function App() {
     if (!isReady || fileList.length > 0) return
 
     const createStartingFile = async () => {
-      const startingFile = 'starting_file'
+      const startingFile = 'welcome'
       console.info('Creating starting file!')
       await createFile(startingFile)
       await writeToFile(startingFile, localText)
@@ -111,6 +111,23 @@ function App() {
 
     createStartingFile()
   }, [fileList, isReady])
+
+  // ensure theme changes on html element
+  useEffect(() => {
+    const html: HTMLElement = document.getElementsByTagName('html')[0]
+    html.setAttribute('data-theme', settings.theme)
+
+    // TODO: Bad way to do this dont like it
+    html.style.colorScheme = settings.theme
+
+    const metaElement = document.querySelectorAll('meta[name="theme-color"]')
+    if (metaElement.length > 0) {
+      const themeColor = getComputedStyle(document.documentElement).getPropertyValue(
+        '--color-background'
+      )
+      metaElement[0].setAttribute('content', `rgb(${themeColor})`)
+    }
+  }, [settings.theme])
 
   // on mount change store settings to match local storage
   useMount(() => {
