@@ -56,6 +56,7 @@ export default function FileViewer() {
         </Stack>
         <Stack className={styles.fileViewMenu} reverse>
           <IconButton
+            title='Create new file'
             size={18}
             icon={VscNewFile}
             onClick={() => setCreatingFile(true)}></IconButton>

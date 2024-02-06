@@ -2,6 +2,7 @@ import { useLocalStorage } from '@uidotdev/usehooks'
 import cx from 'classnames'
 import { Suspense, lazy, useState } from 'react'
 import { Item, ItemParams, ItemProps, Menu, Separator, useContextMenu } from 'react-contexify'
+import { createPortal } from 'react-dom'
 import { LOCAL_STORAGE_MAP } from '@/constants'
 import { useFileSystem } from '@/hooks'
 import styles from './FileItem.module.scss'
@@ -14,6 +15,10 @@ const { localText: localTextKey, currentFile: currentFileKey } = LOCAL_STORAGE_M
 interface FileItemProps {
   fileHandle: FileSystemFileHandle
   rename?: boolean
+}
+
+function Portal({ children }: { children: React.ReactNode }) {
+  return createPortal(children, document.body)
 }
 
 export default function FileItem(props: FileItemProps) {
@@ -93,18 +98,20 @@ export default function FileItem(props: FileItemProps) {
       {!renaming && (
         <div onClick={openFile} className={fileItemClass} onContextMenu={handleContextMenu}>
           {!renaming && fileHandle.name && <span>{fileHandle.name}</span>}
-          <Menu id={fileHandle.name} className={styles.fileContextMenu}>
-            <Item id='rename' onClick={handleItemClick}>
-              Rename File
-            </Item>
-            <Item id='download' onClick={handleItemClick} disabled>
-              Download File
-            </Item>
-            <Separator />
-            <Item id='delete' onClick={handleItemClick} disabled={fileList.length === 1}>
-              Delete File
-            </Item>
-          </Menu>
+          <Portal>
+            <Menu id={fileHandle.name} className={styles.fileContextMenu} animation={false}>
+              <Item id='rename' onClick={handleItemClick}>
+                Rename File
+              </Item>
+              <Item id='download' onClick={handleItemClick} disabled>
+                Download File
+              </Item>
+              <Separator />
+              <Item id='delete' onClick={handleItemClick} disabled={fileList.length === 1}>
+                Delete File
+              </Item>
+            </Menu>
+          </Portal>
         </div>
       )}
     </>
