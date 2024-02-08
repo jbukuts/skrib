@@ -9,6 +9,10 @@ export interface RootState {
   fileList: (FileSystemFileHandle | FileSystemDirectoryHandle)[]
 }
 
+type FileItem = { name: string; type: 'file' }
+type Tree = (FileItem | FolderItem)[]
+type FolderItem = { name: string; type: 'folder'; children: Tree }
+
 interface RootMutate {
   initalizeRoot: () => Promise<void>
   updateList: () => Promise<boolean>
@@ -18,11 +22,46 @@ interface RootMutate {
   deleteFile: (n: string) => Promise<boolean>
   renameFile: (n: string, o: string) => Promise<boolean>
   doesAlreadyExist: (n: string) => boolean
+  createTree: () => Promise<void>
 }
 
 const useRootStore = create<RootState & RootMutate>((set, get) => ({
   opfsRoot: undefined,
   fileList: [],
+  folderListTest: [],
+  fileListTest: [],
+  createTree: async () => {
+    const opfsRoot = get().opfsRoot
+    if (!opfsRoot) return
+
+    const generateTree = async (
+      directoryHandle: FileSystemDirectoryHandle,
+      files: string[] = [],
+      folders: string[] = [],
+      currentPath: string = '',
+      tree: Tree = []
+    ) => {
+      for await (const [name, handle] of directoryHandle) {
+        if (handle.kind === 'file') {
+          files.splice(0, 0, [currentPath, name].join('/'))
+          tree.splice(0, 0, { name, type: 'file' })
+        } else {
+          const cp = [currentPath, name].join('/')
+          const nestedTree: FolderItem = { name, type: 'folder', children: [] }
+          tree.splice(0, 0, nestedTree)
+          folders.splice(0, 0, cp)
+          await generateTree(handle, files, folders, cp, nestedTree.children)
+        }
+      }
+
+      return [files, folders, tree]
+    }
+
+    const [files, folders, tree] = await generateTree(opfsRoot)
+    console.log(files)
+    console.log(folders)
+    console.log(tree)
+  },
   initalizeRoot: async () => {
     const root = await navigator.storage.getDirectory()
     set({ opfsRoot: root })
@@ -132,16 +171,20 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
 }))
 
 export default function useFileSystem() {
-  const { opfsRoot, initalizeRoot: initRoot, updateList, ...rest } = useRootStore()
+  const { opfsRoot, initalizeRoot: initRoot, updateList, createTree, ...rest } = useRootStore()
   const [isReady, setIsReady] = useState(false)
 
   useMount(() => {
-    if (opfsRoot) return
+    if (opfsRoot) {
+      setIsReady(true)
+      return
+    }
 
     const init = async () => {
       console.log('Initing opfs root and list!')
       await initRoot()
       await updateList()
+      await createTree()
       setIsReady(true)
     }
 
