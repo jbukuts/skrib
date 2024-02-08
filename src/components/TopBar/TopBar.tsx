@@ -1,4 +1,4 @@
-import { IoMdSettings } from 'react-icons/io'
+import { VscSettingsGear } from 'react-icons/vsc'
 import { useShallow } from 'zustand/react/shallow'
 import { IconButton } from '@/components/UI'
 import { Stack } from '@/components/UI/Layout'
@@ -18,9 +18,14 @@ export default function TopBar() {
       <p>
         skrib <i>(wip)</i>
       </p>
-      <Stack dir='horizontal' style={{ alignItems: 'center', gap: '1rem' }}>
+      <Stack dir='horizontal' spacing='sm' style={{ alignItems: 'center' }}>
         <PreviewButtons />
-        <IconButton title='Show settings' icon={IoMdSettings} onClick={toggleSettings} />
+        <IconButton
+          title='Show settings'
+          size={22}
+          icon={VscSettingsGear}
+          onClick={toggleSettings}
+        />
       </Stack>
     </Stack>
   )
