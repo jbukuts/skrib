@@ -19,7 +19,7 @@ export const DEF_SETTINGS: EditorState = {
   showPreview: false,
   showSettings: false,
   scrollPosition: 0,
-  fileView: false
+  fileView: true
 }
 
 const useEditorStateStore = create<EditorState & EditorMutate>((set) => ({
