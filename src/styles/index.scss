@@ -2,11 +2,11 @@
 
 // needed for context menu theming
 $additional-tokens: (
-  --contexify-menu-bgColor: 'gray-6',
-  --contexify-separator-color: 'accent',
+  --contexify-menu-bgColor: 'fileitem-background',
+  --contexify-separator-color: 'border',
   --contexify-item-color: 'foreground',
   --contexify-activeItem-color: 'foreground',
-  --contexify-activeItem-bgColor: 'gray-5',
+  --contexify-activeItem-bgColor: 'border',
   --contexify-rightSlot-color: 'foreground',
   --contexify-activeRightSlot-color: 'foreground',
   --contexify-arrow-color: 'foreground',
@@ -17,10 +17,6 @@ $additional-tokens: (
   font-family: system-ui, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  // color-scheme: light dark;
-  // color: rgba(255, 255, 255, 0.87);
-  // background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

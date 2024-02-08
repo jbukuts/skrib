@@ -2,8 +2,8 @@
   align-items: center;
 
   & > div {
-    border: 2px solid get-color('accent');
-    background-color: get-color(gray-6);
+    border: 2px solid get-color('border');
+    background-color: get-color('border');
     padding: 0.5rem 0.65rem;
     border-radius: 5px;
     font-family: 'JetBrains Mono Variable';

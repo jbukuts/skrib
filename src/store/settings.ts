@@ -10,7 +10,7 @@ export type FontFace =
   | 'Ubuntu Mono'
   | 'JetBrains Mono Variable'
 
-export type Theme = 'light' | 'dark' | 'monokai'
+export type Theme = 'light' | 'dark' | 'gruvbox-light'
 
 export interface SettingsState {
   fontFace: FontFace
