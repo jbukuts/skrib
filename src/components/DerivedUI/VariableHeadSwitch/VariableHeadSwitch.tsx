@@ -1,14 +1,8 @@
-import { useShallow } from 'zustand/react/shallow'
 import { Switch } from '@/components/UI'
-import useSettingsStore from '@/store/settings'
+import { useUserSettings } from '@/hooks'
 
 export default function VariableHeadSwitch() {
-  const { variableHeadings, toggleVariableHeadings } = useSettingsStore(
-    useShallow((s) => ({
-      variableHeadings: s.variableHeadings,
-      toggleVariableHeadings: s.toggleVariableHeadings
-    }))
-  )
+  const { variableHeadings, toggleVariableHeadings } = useUserSettings()
 
   return (
     <Switch
