@@ -37,7 +37,7 @@
     }
 
     & ::selection {
-      background-color: get-color('foreground', 0.25) !important;
+      background-color: get-color('foreground', 0.15) !important;
     }
   }
 
@@ -47,7 +47,7 @@
 
   & .cm-gutters {
     background-color: get-color('foreground', 0.05);
-    border-right: 2px solid get-color('accent');
+    border-right: 2px solid get-color('border');
   }
 
   & .cm-activeLineGutter {
@@ -75,7 +75,7 @@
   & .cm-panels-bottom {
     background-color: get-color('background', 0.35);
     color: get-color('foreground');
-    border-top: 2px solid get-color('accent');
+    border-top: 2px solid get-color('border');
     @include cross-backdrop-filter(blur(5px))
   }
 

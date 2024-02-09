@@ -1,7 +1,11 @@
+$border-color--hover: get-color('border');
+$fill-color: get-color('foreground');
+
 .iconButton {
   background-color: transparent;
-  border: none;
-  padding: 0;
+  padding: 0.175rem;
+  border: 1px solid transparent;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,7 +14,7 @@
   transition: opacity 80ms ease-in-out;
 
   & > svg {
-    fill: get-color('foreground');
+    fill: $fill-color;
     transition: filter 80ms ease-in-out;
   }
 
@@ -28,6 +32,7 @@
 
   &:hover {
     cursor: pointer;
+    border-color: $border-color--hover;
 
     & > svg {
       filter: drop-shadow(0px 0px 5px get-color('foreground', 0.5));

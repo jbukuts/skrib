@@ -25,12 +25,9 @@ $border-radius: 5px;
   border-radius: $border-radius;
   text-align: left;
   line-height: 1.5;
-  background: get-color('foreground', 0.0475);
-  border: 1px solid get-color('accent');
-  color: get-color('foreground');
-  // box-shadow: 0px 2px 4px ${
-  //   isDarkMode ? 'rgba(0,0,0, 0.5)' : 'rgba(0,0,0, 0.05)'
-  // };
+  background: get-color('select-background');
+  border: 1px solid get-color('select-border');
+  color: get-color('select-foreground');
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 120ms;
@@ -49,12 +46,9 @@ $border-radius: 5px;
   border-radius: $border-radius;
   overflow: auto;
   outline: 0px;
-  background: get-color('gray-6');
-  border: 1px solid get-color('accent');
-  color: get-color('foreground');
-  // box-shadow: 0px 4px 6px ${
-  //   isDarkMode ? 'rgba(0,0,0, 0.50)' : 'rgba(0,0,0, 0.05)'
-  // };
+  background: get-color('select-background');
+  border: 1px solid get-color('select-border');
+  color: get-color('select-foreground');
 
   .placement-top & {
     transform-origin: bottom;
@@ -80,13 +74,13 @@ $border-radius: 5px;
 
   // selected item
   &:global(.base--selected) {
-    color: get-color('foreground');
-    background-color: get-color('foreground', 0.075);
+    color: get-color('select-foreground_item--active');
+    background-color: get-color('select-background_item--active') !important;
   }
 
-  // hoverd item
+  // hovered item
   &:hover {
     cursor: pointer;
-    background-color: get-color('foreground', 0.15);
+    background-color: get-color('select-background_item--hover', 0.675);
   }
 }

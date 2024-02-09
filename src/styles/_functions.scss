@@ -1,6 +1,13 @@
-// @use 'sass:color';
+@use 'sass:color';
 
-// // split color into string
-// @function split-color($c) {
-//   @return '#{color.red($c)}, #{color.green($c)}, #{color.blue($c)}';
-// }
+@function calc-compliment($color) {
+    $red: color.red($color);
+    $green: color.green($color);
+    $blue: color.blue($color);
+
+    @if ($red * 0.299 + $green * 0.587 + $blue * 0.114) > 186 {
+        @return #000000;
+    } @else {
+        @return #ffffff;
+    }
+}

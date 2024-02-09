@@ -3,13 +3,13 @@
 
   min-width: 100px;
   height: calc(100vh - $header-height) !important;
-  background-color: get-color('gray-6');
+  background-color: get-color('fileview-background');
   position: sticky;
   top: $header-height;
 }
 
 .handle {
-  background-color: get-color('accent');
+  background-color: get-color('border');
   height: 100%;
   width: 2px;
   position: absolute;

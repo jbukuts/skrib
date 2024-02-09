@@ -4,93 +4,166 @@
 
 $theme: 'dark' !default;
 
+$light: (
+  'color-scheme': 'light',
+  'background': rgb(255, 255, 255),
+  'foreground': rgb(0, 0, 0),
+  'border': rgb(222, 222, 222),
+  // file view
+  'fileview-background': rgb(242, 242, 247), 
+  'fileview-foreground': rgb(255,255,255),
+  // file item
+  'fileitem-background': rgb(229, 229, 234),
+  'fileitem-foreground': rgb(0,0,0),
+  // text input
+  'input-background': rgb(242, 242, 247),
+  'input-foreground': rgb(0,0,0),
+  'input-border': rgb(222, 222, 222),
+  // select dropdown
+  'select-background': rgb(242, 242, 247),
+  'select-foreground': rgb(0,0,0),
+  'select-border': rgb(222, 222, 222),
+  'select-background_item--active': rgb(199, 199, 204),
+  'select-foreground_item--active': rgb(0, 0, 0),
+  'select-background_item--hover': rgb(199, 199, 204),
+  'select-foreground_item--hover': rgb(0, 0, 0),
+  // slider
+  'slider-background_track': rgb(142, 142, 147),
+  'slider-background_rail': rgb(142, 142, 147),
+  'slider-background_thumb': rgb(142, 142, 147),
+  // switch
+  'switch-background_track': rgb(199, 199, 204),
+  'switch-background_track--active': rgb(40, 205, 65),
+  'switch-background_thumb': rgb(255, 255, 255),
+  'switch-border_thumb': rgb(222, 222, 222),
+  // button
+  'button-background': rgb(174, 174, 178),
+  'button-foreground': rgb(174, 174, 178),
+  'button-border': green,
+  'button-background--danger': rgb(255, 59, 48),
+  'button-foreground--danger': rgb(255, 255, 255),
+  'button-border--danger': rgb(255, 59, 48),
+  // ansi colors
+  'red': rgb(255, 59, 48),
+  'green': rgb(40, 205, 65),
+  'yellow': rgb(255, 204, 0),
+  'blue': rgb(0, 122, 255),
+  'pink': rgb(255, 45, 85),
+  'cyan': rgb(85, 190, 240),
+  'white': rgb(255, 255, 255),
+  'black': rgb(0, 0, 0),
+  'gray': rgb(70, 70, 70)
+);
+
+
+$dark: (
+  'color-scheme': 'dark',
+  'background': rgb(21, 21, 21),
+  'foreground': rgb(215, 215, 215),
+  'border': rgb(127, 127, 127),
+  // file view
+  'fileview-background': rgb(28, 28, 30), 
+  'fileview-foreground': rgb(255,255,255),
+  // file item
+  'fileitem-background': rgb(44, 44, 46),
+  'fileitem-foreground': rgb(215, 215, 215),
+  // text input
+  'input-background': rgb(28, 28, 30),
+  'input-foreground': rgb(215, 215, 215),
+  'input-border': rgb(127, 127, 127),
+  // select dropdown
+  'select-background': rgb(28, 28, 30),
+  'select-foreground': rgb(215, 215, 215),
+  'select-border': rgb(127, 127, 127),
+  'select-background_item--active': rgb(72, 72, 74),
+  'select-foreground_item--active': rgb(215, 215, 215),
+  'select-background_item--hover': rgb(72, 72, 74),
+  'select-foreground_item--hover': rgb(215, 215, 215),
+  // slider
+  'slider-background_track': rgb(152, 152, 157),
+  'slider-background_rail': rgb(152, 152, 157),
+  'slider-background_thumb': rgb(152, 152, 157),
+  // switch
+  'switch-background_track': rgb(72, 72, 74),
+  'switch-background_track--active': rgb(40, 205, 65),
+  'switch-background_thumb': rgb(215, 215, 215),
+  'switch-border_thumb': rgb(207, 207, 207),
+  // button
+  'button-background': rgb(174, 174, 178),
+  'button-foreground': rgb(174, 174, 178),
+  'button-border': green,
+  'button-background--danger': rgb(255, 69, 58),
+  'button-foreground--danger': rgb(255, 255, 255),
+  'button-border--danger': rgb(255, 69, 48),
+  // ansi colors
+  'red': rgb(255, 69, 58),
+  'green': rgb(50, 215, 75),
+  'yellow': rgb(255, 214, 10),
+  'blue': rgb(10, 132, 255),
+  'pink': rgb(255, 55, 95),
+  'cyan': rgb(90, 200, 245),
+  'white': rgb(255, 255, 255),
+  'black': rgb(0, 0, 0),
+  'gray': rgb(207, 207, 207)
+);
+
+$gruvbox-light: (  
+  'color-scheme': 'light',
+  'background': #fbf1c7,
+  'foreground': #282828,
+  'border': #c8b899,
+  // file view
+  'fileview-background': #ecddb4, 
+  'fileview-foreground': #282828,
+  // file item
+  'fileitem-background': #d9c8a4,
+  'fileitem-foreground': #282828,
+  // text input
+  'input-background': #d9c8a4,
+  'input-foreground': #282828,
+  'input-border': #5b534d,
+  // select dropdown
+  'select-background': #ecddb4,
+  'select-foreground': #282828,
+  'select-border': #5b534d,
+  'select-background_item--active': #d9c8a4,
+  'select-foreground_item--active': #282828,
+  'select-background_item--hover': #c3b795,
+  'select-foreground_item--hover': #282828,
+  // slider
+  'slider-background_track': #c8b899,
+  'slider-background_rail': #c8b899,
+  'slider-background_thumb': #c8b899,
+  // switch
+  'switch-background_track': #c8b899,
+  'switch-background_track--active': #797410,
+  'switch-background_thumb': #d9c8a4,
+  'switch-border_thumb': #c3b795,
+  // button
+  // TODO: add normal, focus, success, warning tokens
+  'button-background': rgb(174, 174, 178),
+  'button-foreground': rgb(174, 174, 178),
+  'button-border': green,
+  'button-background--danger': #9d0308,
+  'button-foreground--danger': #f4d1c9,
+  'button-border--danger': #e8ac9e,
+  // ansi colors
+  'red': #9d0308,
+  'green': #797410,
+  'yellow': #b57615,
+  'blue': #0b6678,
+  'pink': #7c6f64,
+  'cyan': #437b59,
+  'white': #282828,
+  'black': #fbf1c7,
+  'gray': #625959
+);
+
+
 $themes-colors: (
-  monokai: (
-    // text
-    'background': rgb(46, 46, 46),
-    'foreground': rgb(214, 214, 214),
-    'accent': rgb(121, 121, 121),
-    // rainbow
-    'red': rgb(176, 82, 121),
-    'orange': rgb(232, 125, 62),
-    'yellow': rgb(229, 181, 103),
-    'green': rgb(180, 210, 115),
-    'mint': rgb(108, 153, 187),
-    'teal': rgb(108, 153, 187),
-    'cyan': rgb(108, 153, 187),
-    'blue': rgb(108, 153, 187),
-    'indigo': rgb(108, 153, 187),
-    'purple': rgb(158, 134, 200),
-    'pink': rgb(176, 82, 121),
-    'brown': rgb(172, 142, 104),
-    // TODO: BAD COLORS
-    'gray-0': rgb(70, 70, 70),
-    'gray-1': rgb(142, 142, 147),
-    'gray-2': rgb(174, 174, 178),
-    'gray-3': rgb(199, 199, 204),
-    'gray-4': rgb(209, 209, 214),
-    'gray-5': rgb(229, 229, 234),
-    'gray-6': rgb(242, 242, 247)
-  ),
-  light: (
-    // text
-    'background': rgb(255, 255, 255),
-    'accent': rgb(222, 222, 222),
-    'foreground': rgb(0, 0, 0),
-    'outline': rgb(149, 149, 149),
-    // rainbow
-    'red': rgb(255, 59, 48),
-    'orange': rgb(255, 149, 0),
-    'yellow': rgb(255, 204, 0),
-    'green': rgb(40, 205, 65),
-    'mint': rgb(0, 199, 190),
-    'teal': rgb(89, 173, 196),
-    'cyan': rgb(85, 190, 240),
-    'blue': rgb(0, 122, 255),
-    'indigo': rgb(88, 86, 214),
-    'purple': rgb(175, 82, 222),
-    'pink': rgb(255, 45, 85),
-    'brown': rgb(162, 132, 92),
-    // grays
-    'white': rgb(255, 255, 255),
-    'black': rgb(0, 0, 0),
-    'gray-0': rgb(70, 70, 70),
-    'gray-1': rgb(142, 142, 147),
-    'gray-2': rgb(174, 174, 178),
-    'gray-3': rgb(199, 199, 204),
-    'gray-4': rgb(209, 209, 214),
-    'gray-5': rgb(229, 229, 234),
-    'gray-6': rgb(242, 242, 247)
-  ),
-  dark: (
-    // 'background': rgb(6, 6, 8),
-    // 'foreground': rgb(220, 220, 225),
-    'background': rgb(21, 21, 21),
-    'foreground': rgb(215, 215, 215),
-    'accent': rgb(127, 127, 127),
-    'outline': rgb(88, 88, 88),
-    'red': rgb(255, 69, 58),
-    'orange': rgb(255, 159, 10),
-    'yellow': rgb(255, 214, 10),
-    'green': rgb(50, 215, 75),
-    'mint': rgb(102, 212, 207),
-    'teal': rgb(106, 196, 220),
-    'cyan': rgb(90, 200, 245),
-    'blue': rgb(10, 132, 255),
-    'indigo': rgb(94, 92, 230),
-    'purple': rgb(191, 90, 242),
-    'pink': rgb(255, 55, 95),
-    'brown': rgb(172, 142, 104),
-    'white': rgb(255, 255, 255),
-    'black': rgb(0, 0, 0),
-    'gray-0': rgb(207, 207, 207),
-    'gray-1': rgb(152, 152, 157),
-    'gray-2': rgb(99, 99, 102),
-    'gray-3': rgb(72, 72, 74),
-    'gray-4': rgb(58, 58, 60),
-    'gray-5': rgb(44, 44, 46),
-    'gray-6': rgb(28, 28, 30)
-  )
+  light: $light,
+  dark: $dark,
+  gruvbox-light: $gruvbox-light
 );
 
 // helper to deep merge arbitrary map list
@@ -118,7 +191,11 @@ $themes-colors: (
       @each $name, $property in $properties {
         @if (meta.type-of($property) == 'color') {
           --color-#{$name}: #{split-color($property)};
-        } @else {
+        }
+        @else if ($name == 'color-scheme') {
+          #{$name}: #{$property}
+        }
+        @else {
           --effect-#{$name}: #{$property};
         }
       }

@@ -59,7 +59,7 @@ const DEF_EDITOR_THEME = EditorView.theme({
 
 const getColor = (name: string, opacity: number = 1) => `rgba(var(--color-${name}), ${opacity})`
 
-const headingStyle = { fontWeight: 700, textDecoration: 'underline', color: getColor('gray-1') }
+const headingStyle = { fontWeight: 700, textDecoration: 'underline', color: getColor('gray') }
 
 // allows for larger headings
 const VARIABLE_HEADING_HIGHLIGHTER = syntaxHighlighting(

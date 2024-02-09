@@ -1,6 +1,8 @@
 $border-radius: 5px;
-$active-color: get-color('green');
-$inactive-color: get-color('gray-3');
+$active-color: get-color('switch-background_track--active');
+$inactive-color: get-color('switch-background_track');
+$thumb-background: get-color('switch-background_thumb');
+$thumb-border: get-color('switch-border_thumb', .5);
 
 $height: 1rem;
 $width: 2rem;
@@ -52,13 +54,13 @@ $padding: 0.25rem;
 
 .thumb {
   box-sizing: border-box;
-  border: 1px solid white;
+  border: 1px solid $thumb-border;
   left: 0;
   display: block;
   width: calc($height);
   height: calc($height);
   border-radius: $height;
-  background-color: #fff;
+  background-color: $thumb-background;
   position: relative;
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

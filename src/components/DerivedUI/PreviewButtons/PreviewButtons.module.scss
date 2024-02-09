@@ -1,3 +1,9 @@
+.wrapper {
+  background-color: get-color('foreground', 0.175);
+  padding: .1rem;
+  border-radius: 5px;
+}
+
 .inactive {
   opacity: 0.5 !important;
 }

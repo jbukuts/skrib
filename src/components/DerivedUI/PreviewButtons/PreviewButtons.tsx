@@ -1,12 +1,12 @@
 import cx from 'classnames'
-import { FaAlignLeft, FaCode } from 'react-icons/fa6'
+import { VscCode, VscOpenPreview } from 'react-icons/vsc'
 import { useShallow } from 'zustand/react/shallow'
 import { IconButton } from '@/components/UI'
 import { Stack } from '@/components/UI/Layout'
 import useEditorStateStore from '@/store/editor-state'
 import styles from './PreviewButtons.module.scss'
 
-const ICON_SIZE = 24
+const ICON_SIZE = 22
 
 export default function PreviewButtons() {
   const { showPreview, setArb } = useEditorStateStore(
@@ -14,18 +14,18 @@ export default function PreviewButtons() {
   )
 
   return (
-    <Stack>
+    <Stack spacing='xs' className={styles.wrapper}>
       <IconButton
         title='Show Markdown view'
         size={ICON_SIZE}
         className={cx(showPreview && styles.inactive)}
-        icon={FaCode}
+        icon={VscCode}
         onClick={() => setArb({ showPreview: false })}></IconButton>
       <IconButton
         title='Show HTML view'
         size={ICON_SIZE}
         className={cx(!showPreview && styles.inactive)}
-        icon={FaAlignLeft}
+        icon={VscOpenPreview}
         onClick={() => setArb({ showPreview: true })}></IconButton>
     </Stack>
   )
