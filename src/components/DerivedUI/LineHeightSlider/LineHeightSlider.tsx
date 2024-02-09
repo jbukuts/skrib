@@ -1,15 +1,8 @@
-import { useShallow } from 'zustand/react/shallow'
 import { NewSlider } from '@/components/UI'
-
-import useSettingsStore from '@/store/settings'
+import { useUserSettings } from '@/hooks'
 
 export default function LineHeightSlider() {
-  const { lineHeight, setLineHeight } = useSettingsStore(
-    useShallow((s) => ({
-      lineHeight: s.lineHeight,
-      setLineHeight: s.setLineHeight
-    }))
-  )
+  const { lineHeight, setLineHeight } = useUserSettings()
 
   const handleLineHeight = (v: number) => setLineHeight(v)
 

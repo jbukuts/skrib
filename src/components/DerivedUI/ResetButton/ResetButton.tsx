@@ -1,8 +1,8 @@
 import { Button } from '@/components/UI'
-import useSettingsStore from '@/store/settings'
+import { useUserSettings } from '@/hooks'
 
 export default function ResetButton() {
-  const resetAll = useSettingsStore((s) => s.resetAll)
+  const { resetAll } = useUserSettings()
 
   return (
     <Button color='danger' onClick={resetAll} style={{ marginTop: '.5rem' }}>

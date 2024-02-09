@@ -1,5 +1,5 @@
-import { useShallow } from 'zustand/react/shallow'
-import useSettingsStore, { Theme } from '@/store/settings'
+import { useUserSettings } from '@/hooks'
+import { Theme } from '@/hooks/useUserSettings'
 import { Select } from '../../UI'
 
 interface ThemeSelectProps {
@@ -21,17 +21,12 @@ const THEME_LIST = [
 export default function ThemeSelect(props: ThemeSelectProps) {
   const { showTitle = false } = props
 
-  const { globalTheme, globalSetTheme } = useSettingsStore(
-    useShallow((s) => ({
-      globalTheme: s.theme,
-      globalSetTheme: s.setTheme
-    }))
-  )
+  const { theme, setTheme } = useUserSettings()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (_e: any, v: string | object | null) => {
     if (!v || typeof v !== 'string') return
-    globalSetTheme(v as Theme)
+    setTheme(v as Theme)
   }
 
   return (
@@ -39,7 +34,7 @@ export default function ThemeSelect(props: ThemeSelectProps) {
       title={showTitle ? 'Theme' : undefined}
       items={THEME_LIST}
       onChange={handleChange}
-      value={globalTheme}
+      value={theme}
       size='sm'></Select>
   )
 }

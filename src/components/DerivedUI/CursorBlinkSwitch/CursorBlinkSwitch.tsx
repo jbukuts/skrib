@@ -1,14 +1,8 @@
-import { useShallow } from 'zustand/react/shallow'
 import { Switch } from '@/components/UI'
-import useSettingsStore from '@/store/settings'
+import { useUserSettings } from '@/hooks'
 
 export default function CursorBlinkSwitch() {
-  const { toggleSmoothCursorBlink, smoothCursorBlink } = useSettingsStore(
-    useShallow((s) => ({
-      toggleSmoothCursorBlink: s.toggleSmoothCursorBlink,
-      smoothCursorBlink: s.smoothCursorBlink
-    }))
-  )
+  const { toggleSmoothCursorBlink, smoothCursorBlink } = useUserSettings()
 
   return (
     <Switch

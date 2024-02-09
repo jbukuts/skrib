@@ -1,8 +1,7 @@
 import keyboardJs from 'keyboardjs'
 import { useShallow } from 'zustand/react/shallow'
-import { useKeyboardJsToggle } from '@/hooks'
+import { useKeyboardJsToggle, useUserSettings } from '@/hooks'
 import useEditorStateStore from '@/store/editor-state'
-import useSettingsStore from '@/store/settings'
 
 const handleSaveFile: keyboardJs.Callback = async (e) => {
   if (!e) return
@@ -49,11 +48,7 @@ export default function KeyCommands() {
     }))
   )
 
-  const { toggleLineNumbers } = useSettingsStore(
-    useShallow((s) => ({
-      toggleLineNumbers: s.toggleLineCount
-    }))
-  )
+  const { toggleLineCount } = useUserSettings()
 
   // define keybind actions
   useKeyboardJsToggle('ctrl + b', toggleFileView)
@@ -64,7 +59,7 @@ export default function KeyCommands() {
   useKeyboardJsToggle('ctrl + m', toggleSettings)
   useKeyboardJsToggle('ctrl + l', (e) => {
     e?.preventDefault()
-    toggleLineNumbers()
+    toggleLineCount()
   })
   useKeyboardJsToggle('ctrl + s', handleSaveFile)
 

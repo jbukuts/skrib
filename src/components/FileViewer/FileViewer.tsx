@@ -45,7 +45,7 @@ export default function FileViewer() {
           {fileList
             .filter((f) => f.kind === 'file')
             .map((f) => {
-              return <FileItem key={f.name} fileHandle={f as FileSystemFileHandle} />
+              return <FileItem key={f.name} fileName={f.name} />
             })}
           {creatingFile && (
             <NewFileInput
