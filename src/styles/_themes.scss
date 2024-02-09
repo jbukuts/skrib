@@ -40,6 +40,9 @@ $light: (
   'button-background': rgb(174, 174, 178),
   'button-foreground': rgb(174, 174, 178),
   'button-border': green,
+  'button-background--danger': rgb(255, 59, 48),
+  'button-foreground--danger': rgb(255, 255, 255),
+  'button-border--danger': rgb(255, 59, 48),
   // ansi colors
   'red': rgb(255, 59, 48),
   'green': rgb(40, 205, 65),
@@ -89,6 +92,9 @@ $dark: (
   'button-background': rgb(174, 174, 178),
   'button-foreground': rgb(174, 174, 178),
   'button-border': green,
+  'button-background--danger': rgb(255, 69, 58),
+  'button-foreground--danger': rgb(255, 255, 255),
+  'button-border--danger': rgb(255, 69, 48),
   // ansi colors
   'red': rgb(255, 69, 58),
   'green': rgb(50, 215, 75),
@@ -107,10 +113,10 @@ $gruvbox-light: (
   'foreground': #282828,
   'border': #c8b899,
   // file view
-  'fileview-background': #d9c8a4, 
+  'fileview-background': #ecddb4, 
   'fileview-foreground': #282828,
   // file item
-  'fileitem-background': #ecddb4,
+  'fileitem-background': #d9c8a4,
   'fileitem-foreground': #282828,
   // text input
   'input-background': #d9c8a4,
@@ -134,9 +140,13 @@ $gruvbox-light: (
   'switch-background_thumb': #d9c8a4,
   'switch-border_thumb': #c3b795,
   // button
+  // TODO: add normal, focus, success, warning tokens
   'button-background': rgb(174, 174, 178),
   'button-foreground': rgb(174, 174, 178),
   'button-border': green,
+  'button-background--danger': #9d0308,
+  'button-foreground--danger': #f4d1c9,
+  'button-border--danger': #e8ac9e,
   // ansi colors
   'red': #9d0308,
   'green': #797410,

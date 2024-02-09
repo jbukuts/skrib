@@ -29,8 +29,9 @@ $overlay-grad: linear-gradient(rgba(255, 255, 255, $overlay-opac), rgba(0, 0, 0,
 }
 
 .danger {
-  background: $overlay-grad, get-color('red');
-  color: get-color('white');
+  background: $overlay-grad, get-color('button-background--danger');
+  color: get-color('button-foreground--danger');
+  border: 1px solid get-color('button-border--danger');
 }
 
 .success {
