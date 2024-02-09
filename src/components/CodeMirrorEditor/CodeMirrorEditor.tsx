@@ -59,7 +59,7 @@ const DEF_EDITOR_THEME = EditorView.theme({
 
 const getColor = (name: string, opacity: number = 1) => `rgba(var(--color-${name}), ${opacity})`
 
-const headingStyle = { fontWeight: 700, textDecoration: 'underline', color: getColor('gray-1') }
+const headingStyle = { fontWeight: 700, textDecoration: 'underline', color: getColor('gray') }
 
 // allows for larger headings
 const VARIABLE_HEADING_HIGHLIGHTER = syntaxHighlighting(
@@ -139,7 +139,13 @@ export default function CodeMirrorEditor(props: CodeMirrorEditorProps) {
       foldGutter: false
     },
     extensions: [
-      EditorView.contentAttributes.of({ id: 'skrib-editor', 'aria-label': 'skrib-editor' }),
+      EditorView.contentAttributes.of({
+        id: 'skrib-editor',
+        'aria-label': 'skrib-editor',
+        'data-gram': 'false',
+        'data-gram_editor': 'false',
+        'data-enable-grammarly': 'false'
+      }),
       DEF_EDITOR_THEME,
       appliedTheme,
       showPanel.of(showInfoPanel ? wordCountPanel : null),

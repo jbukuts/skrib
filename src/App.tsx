@@ -107,6 +107,20 @@ function App() {
     createStartingFile()
   }, [fileList, isReady])
 
+  // ensure theme changes on html element
+  useEffect(() => {
+    const html: HTMLElement = document.getElementsByTagName('html')[0]
+    html.setAttribute('data-theme', settings.theme)
+
+    const metaElement = document.querySelectorAll('meta[name="theme-color"]')
+    if (metaElement.length > 0) {
+      const themeColor = getComputedStyle(document.documentElement).getPropertyValue(
+        '--color-background'
+      )
+      metaElement[0].setAttribute('content', `rgb(${themeColor})`)
+    }
+  }, [settings.theme])
+
   return (
     <>
       <TopBar />

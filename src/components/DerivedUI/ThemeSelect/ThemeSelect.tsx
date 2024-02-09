@@ -7,15 +7,9 @@ interface ThemeSelectProps {
 }
 
 const THEME_LIST = [
-  {
-    title: 'Light',
-    value: 'light'
-  },
-  {
-    title: 'Dark',
-    value: 'dark'
-  },
-  { title: 'Monokai', value: 'monokai' }
+  { title: 'Light', value: 'light' },
+  { title: 'Dark', value: 'dark' },
+  { title: 'Gruvbox Light', value: 'gruvbox-light' }
 ]
 
 export default function ThemeSelect(props: ThemeSelectProps) {
