@@ -1,16 +1,15 @@
 import { useDebounce, useLocalStorage } from '@uidotdev/usehooks'
 import { Suspense, lazy, useCallback, useEffect } from 'react'
-import { useDeepCompareEffect, useMount } from 'react-use'
 import { useShallow } from 'zustand/react/shallow'
 import { CodeMirrorEditor, KeyCommands, TopBar } from '@/components'
+import FileViewer from '@/components/FileViewer/FileViewer'
+import { Stack } from '@/components/UI/Layout'
 import { DEF_TEXT } from '@/constants'
+import { useFileSystem, useUserSettings } from '@/hooks'
 import useEditorStateStore from '@/store/editor-state'
-import useSettingsStore, { DEF_SETTINGS, SettingsState } from '@/store/settings'
 import '#styles/App.scss'
 import '#styles/themes/ascetic.css'
-import FileViewer from './components/FileViewer/FileViewer'
-import { Stack } from './components/UI/Layout'
-import { useFileSystem } from './hooks'
+import useTheme from './hooks/useTheme'
 
 const Settings = lazy(() => import('@/components/Settings'))
 const NewModal = lazy(() => import('@/components/UI/NewModal'))
@@ -18,24 +17,6 @@ const Preview = lazy(() => import('@/components/Preview'))
 const FirstTime = lazy(() => import('@/components/FirstTime'))
 
 function App() {
-  // persistent user settings
-  const { settings, setArbitrary } = useSettingsStore(
-    useShallow((s) => ({
-      settings: {
-        fontFace: s.fontFace,
-        fontSize: s.fontSize,
-        lineHeight: s.lineHeight,
-        showLineCount: s.showLineCount,
-        showInfoPanel: s.showInfoPanel,
-        variableHeadings: s.variableHeadings,
-        theme: s.theme,
-        smoothCursorBlink: s.smoothCursorBlink,
-        smoothCursorMove: s.smoothCursorMove
-      } as SettingsState,
-      setArbitrary: s.setArbitrary
-    }))
-  )
-
   // transient editor state
   const { showSettings, showPreview, fileView, setArbitraryEditorState } = useEditorStateStore(
     useShallow((s) => ({
@@ -66,7 +47,20 @@ function App() {
   // }, [showPreview])
 
   // initialize from local storage or set as default
-  const [localSettings, setLocalSettings] = useLocalStorage<SettingsState>('settings', DEF_SETTINGS)
+  const {
+    showInfoPanel,
+    showLineCount,
+    fontSize,
+    fontFace,
+    variableHeadings,
+    smoothCursorMove,
+    smoothCursorBlink,
+    lineHeight
+  } = useUserSettings()
+
+  // handle theme changes
+  useTheme()
+
   const [localText, setLocalText] = useLocalStorage<string>('file', DEF_TEXT)
   const [firstVisit, setFirstVisit] = useLocalStorage<boolean>('firsttime', true)
   const [currentFile, setCurrentFile] = useLocalStorage<string>('current_file')
@@ -113,43 +107,6 @@ function App() {
     createStartingFile()
   }, [fileList, isReady])
 
-  // ensure theme changes on html element
-  useEffect(() => {
-    const html: HTMLElement = document.getElementsByTagName('html')[0]
-    html.setAttribute('data-theme', settings.theme)
-
-    // TODO: Bad way to do this dont like it
-    html.style.colorScheme = settings.theme
-
-    const metaElement = document.querySelectorAll('meta[name="theme-color"]')
-    if (metaElement.length > 0) {
-      const themeColor = getComputedStyle(document.documentElement).getPropertyValue(
-        '--color-background'
-      )
-      metaElement[0].setAttribute('content', `rgb(${themeColor})`)
-    }
-  }, [settings.theme])
-
-  // on mount change store settings to match local storage
-  useMount(() => {
-    console.log('theme from localstorage', localSettings.theme)
-    setArbitrary(localSettings)
-  })
-
-  // handle theme changes
-  useEffect(() => {
-    const html: HTMLElement = document.getElementsByTagName('html')[0]
-    html.setAttribute('data-theme', settings.theme)
-
-    // TODO: Bad way to do this dont like it
-    html.style.colorScheme = settings.theme
-  }, [settings.theme])
-
-  // update settings in local storage
-  useDeepCompareEffect(() => {
-    setLocalSettings(settings)
-  }, [settings])
-
   return (
     <>
       <TopBar />
@@ -159,19 +116,19 @@ function App() {
           className={showPreview ? 'hide-me' : ''}
           code={localText}
           onChange={handleTextChange}
-          lineNumbers={settings.showLineCount}
-          lineHeight={settings.lineHeight}
-          fontSize={settings.fontSize}
-          fontFamily={settings.fontFace}
-          showInfoPanel={settings.showInfoPanel}
-          variableHeadingSize={settings.variableHeadings}
-          smoothCursorBlink={settings.smoothCursorBlink}
-          smoothCursorMove={settings.smoothCursorMove}
+          lineNumbers={showLineCount}
+          lineHeight={lineHeight}
+          fontSize={fontSize}
+          fontFamily={fontFace}
+          showInfoPanel={showInfoPanel}
+          variableHeadingSize={variableHeadings}
+          smoothCursorBlink={smoothCursorBlink}
+          smoothCursorMove={smoothCursorMove}
         />
         <Suspense fallback={null}>
           <Preview
             className={!showPreview ? 'hide-me' : ''}
-            fontSize={settings.fontSize}
+            fontSize={fontSize}
             rawText={localText}></Preview>
         </Suspense>
       </Stack>

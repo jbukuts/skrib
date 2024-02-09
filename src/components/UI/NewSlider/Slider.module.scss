@@ -1,6 +1,7 @@
 $thumb-size: 1.25rem;
-$track-color: get-color('gray-1');
-$thumb-color: get-color('gray-1');
+$thumb-border-radius: 5px;
+$track-color: get-color('slider-background_track');
+$thumb-color: get-color('slider-background_thumb');
 $track-border-radius: 6px;
 $track-height: 4px;
 
@@ -63,6 +64,7 @@ $track-height: 4px;
   transition-timing-function: ease;
   transition-duration: 120ms;
   transform-origin: center;
+  border-radius: $thumb-border-radius;
 
   &:global(.base--focusVisible) {
     opacity: 1;
@@ -90,7 +92,7 @@ $track-height: 4px;
   font-weight: 600;
   font-size: 12px;
   position: relative;
-  top: 2em;
+  top: 1.375em;
   text-align: center;
   align-self: center;
 }

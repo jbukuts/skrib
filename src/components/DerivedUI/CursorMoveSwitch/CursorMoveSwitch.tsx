@@ -1,14 +1,8 @@
-import { useShallow } from 'zustand/react/shallow'
 import { Switch } from '@/components/UI'
-import useSettingsStore from '@/store/settings'
+import { useUserSettings } from '@/hooks'
 
 export default function CursorMoveSwitch() {
-  const { smoothCursorMove, toggleSmoothCursorMove } = useSettingsStore(
-    useShallow((s) => ({
-      smoothCursorMove: s.smoothCursorMove,
-      toggleSmoothCursorMove: s.toggleSmoothCursorMove
-    }))
-  )
+  const { smoothCursorMove, toggleSmoothCursorMove } = useUserSettings()
 
   return <Switch title='Cursor Move' onChange={toggleSmoothCursorMove} checked={smoothCursorMove} />
 }

@@ -23,6 +23,8 @@ interface RootMutate {
   renameFile: (n: string, o: string) => Promise<boolean>
   doesAlreadyExist: (n: string) => boolean
   createTree: () => Promise<void>
+  indexOfFile: (n: string) => number
+  getFileByName: (n: string) => FileSystemFileHandle | undefined
 }
 
 const useRootStore = create<RootState & RootMutate>((set, get) => ({
@@ -128,11 +130,17 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
   },
   deleteFile: async (name: string) => {
     const { opfsRoot, updateList, doesAlreadyExist } = get()
-    if (!opfsRoot) return false
+    if (!opfsRoot) {
+      console.error('OPFS not instantiated yet!')
+      return false
+    }
 
     try {
       const alreadyExists = doesAlreadyExist(name)
-      if (!alreadyExists) return false
+      if (!alreadyExists) {
+        console.error(`File ${name} does not yet exist. Cannot delete!`)
+        return false
+      }
 
       await opfsRoot.removeEntry(name)
       await updateList()
@@ -148,11 +156,16 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
 
     // get old file text
     const fileText = await getFileText(oldName)
-    if (fileText === undefined) return false
+    if (fileText === undefined) {
+      console.error(`File ${oldName} does not exist. Returning false!`)
+      return false
+    }
 
     // create new file
     const created = await createFile(newName)
-    if (!created) return false
+    if (!created) {
+      console.error(`Unable to create file ${newName}!`)
+    }
 
     // write to new file and delete old file
     const promises = await Promise.all([
@@ -167,6 +180,28 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
   doesAlreadyExist: (name: string) => {
     const { fileList } = get()
     return fileList.map((f) => f.name).some((n) => n === name)
+  },
+  getFileByName: (name: string) => {
+    const { indexOfFile, fileList } = get()
+    const index = indexOfFile(name)
+    return index === -1 ? undefined : (fileList[index] as FileSystemFileHandle)
+  },
+  getFileByIndex: (index: number, wrap: boolean = false) => {
+    const { fileList } = get()
+    const isOutsideBound = index < 0 || index > fileList.length - 1
+
+    if (isOutsideBound && !wrap) return undefined
+
+    const newIndex = isOutsideBound ? fileList.length - 1 - index : index
+
+    return fileList[newIndex]
+  },
+  indexOfFile: (name: string) => {
+    const fileList = get().fileList
+    return fileList
+      .filter((f) => f.kind === 'file')
+      .map((f) => f.name)
+      .indexOf(name)
   }
 }))
 

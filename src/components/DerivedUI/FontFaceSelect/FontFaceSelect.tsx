@@ -1,6 +1,6 @@
-import { useShallow } from 'zustand/react/shallow'
 import { Select } from '@/components/UI'
-import useSettingsStore, { FontFace } from '@/store/settings'
+import { useUserSettings } from '@/hooks'
+import { FontFace } from '@/hooks/useUserSettings'
 
 const FONT_OPTIONS: FontFace[] = [
   'IBM Plex Sans',
@@ -13,12 +13,7 @@ const FONT_OPTIONS: FontFace[] = [
 ]
 
 export default function FontFaceSelect() {
-  const { fontFace, setFontFace } = useSettingsStore(
-    useShallow((s) => ({
-      fontFace: s.fontFace,
-      setFontFace: s.setFontFace
-    }))
-  )
+  const { fontFace, setFontFace } = useUserSettings()
 
   const handleFontChange = (f: string) => setFontFace(f as FontFace)
 

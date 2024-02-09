@@ -1,14 +1,8 @@
-import { useShallow } from 'zustand/react/shallow'
 import { NewSlider } from '@/components/UI'
-import useSettingsStore from '@/store/settings'
+import { useUserSettings } from '@/hooks'
 
 export default function FontSizeSlider() {
-  const { fontSize, setFontSize } = useSettingsStore(
-    useShallow((s) => ({
-      fontSize: s.fontSize,
-      setFontSize: s.setFontSize
-    }))
-  )
+  const { fontSize, setFontSize } = useUserSettings()
 
   const handleFontSize = (fs: string) => setFontSize(parseInt(fs))
 
