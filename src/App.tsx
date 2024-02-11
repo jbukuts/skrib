@@ -63,9 +63,10 @@ function App() {
 
   const [localText, setLocalText] = useLocalStorage<string>('file', DEF_TEXT)
   const [firstVisit, setFirstVisit] = useLocalStorage<boolean>('firsttime', true)
-  const [currentFile, setCurrentFile] = useLocalStorage<string>('current_file')
+  const [currentFilePath, setCurrentFilePath] = useLocalStorage<string>('current_file')
 
-  const { getFileText, isReady, fileList, createFile, writeToFile } = useFileSystem()
+  const { getFileTextByPath, isReady, fileTree, createFileByPath, writeToFileByPath } =
+    useFileSystem()
   const debounceText = useDebounce(localText, 500)
 
   const handleTextChange = useCallback((s: string) => {
@@ -74,9 +75,12 @@ function App() {
 
   // save file automatically
   useEffect(() => {
-    if (!currentFile) return
+    if (!currentFilePath || currentFilePath === '') {
+      console.log('no file selected. nothing to save to')
+      return
+    }
     const saveFile = async () => {
-      await writeToFile(currentFile, localText)
+      await writeToFileByPath(currentFilePath, localText)
       console.log('saved file!')
     }
 
@@ -85,35 +89,37 @@ function App() {
 
   // handle file changes
   useEffect(() => {
-    console.log(currentFile)
-    getFileText(currentFile).then((t) => {
+    console.log(currentFilePath)
+    if (!currentFilePath) return
+    getFileTextByPath(currentFilePath).then((t) => {
       if (t === undefined) return
       setLocalText(t)
     })
-  }, [currentFile])
+  }, [currentFilePath])
 
   // handle initializing starting file
   useEffect(() => {
-    if (!isReady || fileList.length > 0) return
+    if (!isReady || fileTree.length > 0) return
 
     const createStartingFile = async () => {
-      const startingFile = 'welcome'
-      console.info('Creating starting file!')
-      await createFile(startingFile)
-      await writeToFile(startingFile, localText)
-      setCurrentFile(startingFile)
+      console.info('Creating welcome file!')
+      const startingFile = '/welcome'
+      const startingText = await fetch('/welcome.md').then((r) => r.text())
+      await createFileByPath(startingFile)
+      await writeToFileByPath(startingFile, startingText)
+      setCurrentFilePath(startingFile)
     }
 
     createStartingFile()
-  }, [fileList, isReady])
+  }, [fileTree, isReady])
 
   return (
     <>
       <TopBar />
       <Stack spacing='none' style={{ width: '100vw', flex: '1' }}>
-        {fileView && <FileViewer />}
+        {fileView && isReady && <FileViewer />}
         <CodeMirrorEditor
-          className={showPreview ? 'hide-me' : ''}
+          className={showPreview || currentFilePath === '' ? 'hide-me' : ''}
           code={localText}
           onChange={handleTextChange}
           lineNumbers={showLineCount}
@@ -127,7 +133,7 @@ function App() {
         />
         <Suspense fallback={null}>
           <Preview
-            className={!showPreview ? 'hide-me' : ''}
+            className={!showPreview || currentFilePath === '' ? 'hide-me' : ''}
             fontSize={fontSize}
             rawText={localText}></Preview>
         </Suspense>

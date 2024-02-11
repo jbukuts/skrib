@@ -1,0 +1,17 @@
+.folderItem {
+    padding: 0.375rem;
+  font-family: 'JetBrains Mono Variable';
+  font-size: 0.875rem;
+  overflow: hidden;
+  color: get-color('fileitem-foreground');
+  align-items: center;
+
+  &.activeFile {
+    background-color: get-color('fileitem-background', .875) !important;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: get-color('fileitem-background', 0.5);
+  }
+}

@@ -20,8 +20,8 @@
   --contexify-menu-radius: 0;
   --contexify-activeItem-radius: 0;
   --contexify-menu-padding: 0;
-  --contexify-menu-shadow: none;
-  font-size: 0.875rem;
+  --contexify-menu-shadow: 5px 5px 0px #{get-color('foreground', 0.75)};
+  font-size: 0.75rem;
 
   border: 2px solid get-color('border');
 

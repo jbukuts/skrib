@@ -1,4 +1,11 @@
 .root {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid get-color('input-border');
+  color: get-color('input-foreground');
+  background-color: get-color('input-background', 0.375);
+
   &:global(.base--focused) {
     & input {
       &:focus {
@@ -8,17 +15,15 @@
   }
 
   &:global(.base--error) {
-    & input {
-      border-color: get-color('red');
-      background-color: get-color('red', 0.375);
-    }
+    border-color: get-color('red');
+    background-color: get-color('red', 0.375);
   }
 }
 
 .input {
-  background-color: get-color('input-background', 0.375);
-  padding: 0.325rem 0.5rem;
-  border: 1px solid get-color('input-border');
-  color: get-color('input-foreground');
+  padding: 0.25rem 0.5rem;
   font-size: 0.75rem;
+  border: none;
+  outline: none;
+  background-color: transparent;
 }

@@ -2,9 +2,11 @@ import { useLocalStorage } from '@uidotdev/usehooks'
 import cx from 'classnames'
 import { Suspense, lazy, useState } from 'react'
 import { Item, ItemParams, ItemProps, Menu, Separator, useContextMenu } from 'react-contexify'
-import { createPortal } from 'react-dom'
+import { VscFile } from 'react-icons/vsc'
+import Portal from '@/components/Portal'
+import { Stack } from '@/components/UI/Layout'
 import { LOCAL_STORAGE_MAP } from '@/constants'
-import { useCurrentFile, useFileSystem, useNamedFile } from '@/hooks'
+import { useCurrentFile, useNamedFile } from '@/hooks'
 import styles from './FileItem.module.scss'
 import 'react-contexify/ReactContexify.css'
 
@@ -14,15 +16,13 @@ const { currentFile: currentFileKey } = LOCAL_STORAGE_MAP
 
 interface FileItemProps {
   fileName: string
+  path: string
   rename?: boolean
-}
-
-function Portal({ children }: { children: React.ReactNode }) {
-  return createPortal(children, document.body)
+  depth?: number
 }
 
 export default function FileItem(props: FileItemProps) {
-  const { fileName = '' } = props
+  const { fileName = '', path, depth = 0 } = props
   const [renaming, setRenaming] = useState<boolean>(false)
   const [_, setCurrentFile] = useLocalStorage<string>(currentFileKey)
   const { show } = useContextMenu({
@@ -30,9 +30,8 @@ export default function FileItem(props: FileItemProps) {
   })
 
   // file handlers
-  const { fileList, indexOfFile } = useFileSystem()
-  const { currentFileName, saveCurrentFile } = useCurrentFile()
-  const { doesExist, deleteFile, renameFile } = useNamedFile(fileName)
+  const { currentFileName, saveCurrentFile, doesExist: doesCurrentExist } = useCurrentFile()
+  const { deleteFile, moveFile } = useNamedFile(path)
 
   const handleContextMenu = (event: React.MouseEvent) => {
     show({
@@ -45,24 +44,24 @@ export default function FileItem(props: FileItemProps) {
 
   // handle swapping current file
   const openFile = async () => {
-    if (fileName == currentFileName) return
+    if (path == currentFileName) return
+    if (!currentFileName || !doesCurrentExist) {
+      setCurrentFile(path)
+      return
+    }
+
     saveCurrentFile().then((success) => {
-      if (success) setCurrentFile(fileName)
+      if (success) setCurrentFile(path)
     })
   }
 
   // various funcs for context menu
   const handlerMap: Record<string, () => void> = {
     delete: async () => {
-      if (!doesExist || fileList.length === 1) return
-      const currentIndex = indexOfFile(fileName)
-      const shiftIndex = currentIndex === fileList.length - 1 ? -1 : 1
-      const fileToLoad = fileList[currentIndex + shiftIndex].name
-
       // delete file
       const deleteSuccess = await deleteFile()
       if (!deleteSuccess) return
-      setCurrentFile(fileToLoad)
+      setCurrentFile('')
     },
     rename: async () => {
       setRenaming(true)
@@ -76,30 +75,48 @@ export default function FileItem(props: FileItemProps) {
 
   // handle rename of file
   const handleRenameEnter = (newName: string) => {
-    renameFile(newName).then((success) => {
-      if (!success) return
+    // create path from new name
+    const pathSplit = path.split('/')
+    pathSplit[pathSplit.length - 1] = `${newName}.md`
+    const newPath = pathSplit.join('/')
+
+    moveFile(newPath).then((success) => {
+      if (!success) {
+        setCurrentFile('')
+        setRenaming(false)
+        return
+      }
       console.log('rename successful')
-      setCurrentFile(newName)
+      setCurrentFile(newPath)
       setRenaming(false)
     })
   }
 
-  const fileItemClass = cx(styles.fileItem, currentFileName === fileName && styles.activeFile)
+  const fileItemClass = cx(styles.fileItem, currentFileName === path && styles.activeFile)
 
   return (
     <>
       {renaming && (
         <Suspense fallback={null}>
           <NewFileInput
+            fromPath={path.split('/').slice(0, -1).join('/')}
             handleBlur={() => setRenaming(false)}
             handleEnter={handleRenameEnter}
-            startingName={fileName}
+            startingName={fileName.slice(0, -3)}
           />
         </Suspense>
       )}
       {!renaming && (
         <div onClick={openFile} className={fileItemClass} onContextMenu={handleContextMenu}>
-          {!renaming && fileName && <span>{fileName}</span>}
+          {!renaming && fileName && (
+            <Stack
+              dir='horizontal'
+              spacing='sm'
+              style={{ alignItems: 'center', paddingLeft: `${depth}rem` }}>
+              <VscFile></VscFile>
+              <span>{fileName}</span>
+            </Stack>
+          )}
           <Portal>
             <Menu id={fileName} className={styles.fileContextMenu} animation={false}>
               <Item id='rename' onClick={handleItemClick}>
@@ -109,7 +126,7 @@ export default function FileItem(props: FileItemProps) {
                 Download File
               </Item>
               <Separator />
-              <Item id='delete' onClick={handleItemClick} disabled={fileList.length === 1}>
+              <Item id='delete' onClick={handleItemClick}>
                 Delete File
               </Item>
             </Menu>
