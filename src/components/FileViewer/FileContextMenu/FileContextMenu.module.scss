@@ -1,0 +1,15 @@
+.contextMenu {
+  --contexify-zIndex: 999999;
+  --contexify-menu-radius: 0;
+  --contexify-activeItem-radius: 0;
+  --contexify-menu-padding: 0;
+  --contexify-menu-shadow: 5px 5px 0px #{get-color('foreground', 0.75)};
+  font-size: 0.85rem;
+
+  border: 2px solid get-color('border');
+
+  & * {
+    z-index: 9999 !important;
+  }
+}
+

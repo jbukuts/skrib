@@ -8,9 +8,13 @@ type FileItem = { name: string; type: 'file'; fullPath: string }
 type FolderItem = { name: string; type: 'folder'; fullPath: string; children: Tree }
 export type Tree = (FileItem | FolderItem)[]
 
+type FolderObject = Omit<FolderItem, 'children'> & { children: TreeTest }
+type TreeTest = Record<string, FileItem | FolderObject>
+
 export interface RootState {
   opfsRoot: FileSystemDirectoryHandle | undefined
   fileTree: Tree
+  fileTreeObject: TreeTest
   fileListTest: string[]
   folderListTest: string[]
 }
@@ -88,7 +92,15 @@ interface RootMutate {
    * @param r whether to recursively create new path
    * @returns {Promise<boolean>} success value
    */
-  moveFile: (op: string, np: string, r?: boolean) => Promise<boolean>
+  moveFile: (op: string, np: string, r?: boolean, d?: boolean) => Promise<boolean>
+  /**
+   * move folder to new path, retain children's structure within it
+   * @param op original path of folder
+   * @param np new path of folder
+   * @param r whether to recursively create new path
+   * @returns {Promise<boolean>} success value
+   */
+  moveFolder: (op: string, np: string, r?: boolean) => Promise<boolean>
   /**
    * determines if path already exist in structure
    * @param p path of interest
@@ -103,6 +115,7 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
   folderListTest: [],
   fileListTest: [],
   fileTree: [],
+  fileTreeObject: {},
   initalizeRoot: async () => {
     const root = await navigator.storage.getDirectory()
     set({ opfsRoot: root })
@@ -116,34 +129,40 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
       files: string[] = [],
       folders: string[] = [],
       currentPath: string = '',
-      tree: Tree = []
+      tree: Tree = [],
+      treeTest: TreeTest = {}
     ) => {
       for await (const [name, handle] of directoryHandle) {
         if (handle.kind === 'file') {
           const cp = [currentPath, name].join('/')
+          const fileItem: FileItem = { name, type: 'file', fullPath: cp }
           files.splice(0, 0, cp)
-          tree.splice(0, 0, { name, type: 'file', fullPath: cp })
+          tree.splice(0, 0, fileItem)
+          treeTest[name] = fileItem
         } else {
           const cp = [currentPath, name].join('/')
           const nestedTree: FolderItem = { name, type: 'folder', children: [], fullPath: cp }
+          const testNest: FolderObject = { name, type: 'folder', fullPath: cp, children: {} }
+          treeTest[name] = testNest
           tree.splice(0, 0, nestedTree)
           folders.splice(0, 0, cp)
-          await generateTree(handle, files, folders, cp, nestedTree.children)
+          await generateTree(handle, files, folders, cp, nestedTree.children, testNest.children)
         }
       }
-
-      return [files, folders, tree] as [string[], string[], Tree]
+      return [files, folders, tree, treeTest] as [string[], string[], Tree, TreeTest]
     }
 
-    const [files, folders, tree] = await generateTree(opfsRoot)
-
+    const [files, folders, tree, treeObject] = await generateTree(opfsRoot)
     tree.sort((a) => (a.type === 'folder' ? -1 : 0))
-    // tree.sort((a, b) => a.name.localeCompare(b.name))
 
-    // console.log(files)
-    // console.log(folders)
+    console.log(treeObject)
     console.log(tree)
-    set({ fileTree: tree, fileListTest: files, folderListTest: folders })
+    set({
+      fileTree: tree,
+      fileTreeObject: treeObject,
+      fileListTest: files,
+      folderListTest: folders
+    })
   },
   getFileTextByPath: async (path: string) => {
     const { opfsRoot } = get()
@@ -264,7 +283,7 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
 
     return true
   },
-  moveFile: async (oldPath: string, newPath: string, rec: boolean = false) => {
+  moveFile: async (oldPath: string, newPath: string, rec: boolean = false, del: boolean = true) => {
     const { createTree, deleteItemByPath, getFileTextByPath, createFileByPath, writeToFileByPath } =
       get()
 
@@ -283,12 +302,9 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
         return false
       }
 
-      const promises = await Promise.all([
-        writeToFileByPath(newPath, fileText),
-        deleteItemByPath(oldPath, false)
-      ])
-
-      if (!promises.every((v) => v === true)) return false
+      const writeSuccess = await writeToFileByPath(newPath, fileText)
+      if (!writeSuccess) return false
+      if (del) await deleteItemByPath(oldPath, false)
 
       await createTree()
       return true
@@ -296,6 +312,47 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
       console.error('could not move file!')
       return false
     }
+  },
+  moveFolder: async (oldPath: string, newPath: string, rec: boolean = false) => {
+    const { fileTreeObject, createTree, moveFile } = get()
+    const splitOldPath = splitPath(oldPath)
+
+    // lets generate a list of paths we'll need to move
+    let startingPoint = fileTreeObject
+    for (const item of splitOldPath) {
+      startingPoint = (startingPoint[item] as FolderObject).children
+    }
+
+    // create a list of files that exist in a folder
+    const generateChildrenList = (tree: TreeTest, pathList: string[] = []) => {
+      for (const item of Object.values(tree)) {
+        const { type, fullPath } = item
+        if (type === 'file') {
+          pathList.splice(0, 0, fullPath)
+        } else {
+          generateChildrenList(item.children, pathList)
+        }
+      }
+      return pathList
+    }
+
+    // get all original paths, and create new paths
+    const originalChildrenPaths = generateChildrenList(startingPoint)
+    const newChildrenPaths = originalChildrenPaths.map((i) => {
+      const s = splitPath(i)
+      return [...splitPath(newPath), ...s.slice(splitOldPath.length)].join('/')
+    })
+
+    // copy all new files to their new locations
+    for await (const [i, p] of newChildrenPaths.entries()) {
+      await moveFile(originalChildrenPaths[i], p, true, false)
+    }
+
+    console.log(newChildrenPaths)
+    // console.log(startingPoint)
+
+    await createTree()
+    return rec
   },
   doesExist: (path: string, isFile: boolean = true) => {
     const { fileListTest, folderListTest } = get()

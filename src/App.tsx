@@ -103,8 +103,8 @@ function App() {
 
     const createStartingFile = async () => {
       console.info('Creating welcome file!')
-      const startingFile = '/welcome'
-      const startingText = await fetch('/welcome.md').then((r) => r.text())
+      const startingFile = '/welcome.md'
+      const startingText = await fetch(startingFile).then((r) => r.text())
       await createFileByPath(startingFile)
       await writeToFileByPath(startingFile, startingText)
       setCurrentFilePath(startingFile)
@@ -116,7 +116,7 @@ function App() {
   return (
     <>
       <TopBar />
-      <Stack spacing='none' style={{ width: '100vw', flex: '1' }}>
+      <Stack spacing='none' style={{ width: '100%', flex: '1' }}>
         {fileView && isReady && <FileViewer />}
         <CodeMirrorEditor
           className={showPreview || currentFilePath === '' ? 'hide-me' : ''}

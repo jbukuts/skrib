@@ -1,11 +1,9 @@
 import { createElement, useState } from 'react'
-import { Item, ItemParams, ItemProps, Menu, Separator, useContextMenu } from 'react-contexify'
+import { Item, ItemParams, ItemProps, Separator, useContextMenu } from 'react-contexify'
 import { VscFolder, VscFolderOpened } from 'react-icons/vsc'
-import Portal from '@/components/Portal'
-
 import { Stack } from '@/components/UI/Layout'
 import { useFileSystem } from '@/hooks'
-import menuStyles from '../FileItem/FileItem.module.scss'
+import FileContextMenu from '../FileContextMenu'
 import NewFileInput from '../NewFileInput'
 import styles from './FolderItem.module.scss'
 
@@ -22,7 +20,7 @@ export default function FolderItem(props: FolderItemProps) {
   const { show } = useContextMenu({
     id: path
   })
-  const { createFileByPath, createFolderByPath, deleteItemByPath } = useFileSystem()
+  const { createFileByPath, createFolderByPath, deleteItemByPath, moveFolder } = useFileSystem()
   const [creatingItem, setCreatingItem] = useState<'file' | 'folder' | undefined>(undefined)
 
   const handleContextMenu = (event: React.MouseEvent) => {
@@ -41,6 +39,9 @@ export default function FolderItem(props: FolderItemProps) {
     },
     'create-folder': () => {
       setCreatingItem('folder')
+    },
+    'rename-folder': () => {
+      moveFolder(path, '/mover_test')
     },
     delete: () => {
       deleteItemByPath(path)
@@ -74,27 +75,28 @@ export default function FolderItem(props: FolderItemProps) {
         {createElement(showChildren ? VscFolderOpened : VscFolder)}
         {name}
       </Stack>
-      {showChildren && <div>{children}</div>}
+      <div style={{ display: showChildren ? '' : 'none' }}>{children}</div>
       {creatingItem && (
         <NewFileInput
           fromPath={path}
           handleEnter={handleNewItemEnter}
           handleBlur={() => setCreatingItem(undefined)}></NewFileInput>
       )}
-      <Portal>
-        <Menu id={path} className={menuStyles.fileContextMenu} animation={false}>
-          <Item id='create-file' onClick={handleItemClick}>
-            Create New File
-          </Item>
-          <Item id='create-folder' onClick={handleItemClick}>
-            Create New Folder
-          </Item>
-          <Separator></Separator>
-          <Item id='delete' onClick={handleItemClick}>
-            Delete Folder
-          </Item>
-        </Menu>
-      </Portal>
+      <FileContextMenu id={path}>
+        <Item id='create-file' onClick={handleItemClick}>
+          Create New File
+        </Item>
+        <Item id='create-folder' onClick={handleItemClick}>
+          Create New Folder
+        </Item>
+        <Item id='rename-folder' onClick={handleItemClick}>
+          Rename Folder
+        </Item>
+        <Separator></Separator>
+        <Item id='delete' onClick={handleItemClick}>
+          Delete Folder
+        </Item>
+      </FileContextMenu>
     </Stack>
   )
 }

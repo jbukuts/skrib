@@ -1,12 +1,12 @@
 import { useLocalStorage } from '@uidotdev/usehooks'
 import cx from 'classnames'
 import { Suspense, lazy, useState } from 'react'
-import { Item, ItemParams, ItemProps, Menu, Separator, useContextMenu } from 'react-contexify'
+import { Item, ItemParams, ItemProps, Separator, useContextMenu } from 'react-contexify'
 import { VscFile } from 'react-icons/vsc'
-import Portal from '@/components/Portal'
 import { Stack } from '@/components/UI/Layout'
 import { LOCAL_STORAGE_MAP } from '@/constants'
 import { useCurrentFile, useNamedFile } from '@/hooks'
+import FileContextMenu from '../FileContextMenu'
 import styles from './FileItem.module.scss'
 import 'react-contexify/ReactContexify.css'
 
@@ -117,20 +117,18 @@ export default function FileItem(props: FileItemProps) {
               <span>{fileName}</span>
             </Stack>
           )}
-          <Portal>
-            <Menu id={fileName} className={styles.fileContextMenu} animation={false}>
-              <Item id='rename' onClick={handleItemClick}>
-                Rename File
-              </Item>
-              <Item id='download' onClick={handleItemClick} disabled>
-                Download File
-              </Item>
-              <Separator />
-              <Item id='delete' onClick={handleItemClick}>
-                Delete File
-              </Item>
-            </Menu>
-          </Portal>
+          <FileContextMenu id={fileName}>
+            <Item id='rename' onClick={handleItemClick}>
+              Rename File
+            </Item>
+            <Item id='download' onClick={handleItemClick} disabled>
+              Download File
+            </Item>
+            <Separator />
+            <Item id='delete' onClick={handleItemClick}>
+              Delete File
+            </Item>
+          </FileContextMenu>
         </div>
       )}
     </>
