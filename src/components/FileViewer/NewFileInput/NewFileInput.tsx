@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
-import { VscFile, VscFolder } from 'react-icons/vsc'
+import { createElement, useEffect, useState } from 'react'
+import { IconType } from 'react-icons'
+import { VscFile } from 'react-icons/vsc'
 import { Input } from '@/components/UI'
 import { useFileSystem } from '@/hooks'
 import styles from './NewFileInput.module.scss'
 
 interface NewFileItemProps {
   type?: 'file' | 'folder'
+  adornment?: IconType
   fromPath?: string
   startingName?: string
   handleBlur: () => void
@@ -19,7 +21,14 @@ const ERROR_REASONS = {
 }
 
 export default function NewFileInput(props: NewFileItemProps) {
-  const { type = 'file', fromPath = '', startingName = '', handleBlur, handleEnter } = props
+  const {
+    type = 'file',
+    fromPath = '',
+    startingName = '',
+    handleBlur,
+    handleEnter,
+    adornment = VscFile
+  } = props
   const [newName, setNewName] = useState<string>(startingName)
   const [badName, setBadName] = useState<boolean>(false)
   const [_errorReason, setErrorReason] = useState<string>()
@@ -62,7 +71,7 @@ export default function NewFileInput(props: NewFileItemProps) {
 
   return (
     <Input
-      startAdornment={type === 'file' ? <VscFile /> : <VscFolder />}
+      startAdornment={createElement(adornment)}
       className={styles.renameInput}
       error={badName}
       autoFocus

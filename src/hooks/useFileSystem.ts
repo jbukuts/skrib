@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMount } from 'react-use'
 import { create } from 'zustand'
+import { splitPath } from '@/helpers/common'
 
 navigator.storage.getDirectory()
 
@@ -18,8 +19,6 @@ export interface RootState {
   fileListTest: string[]
   folderListTest: string[]
 }
-
-const splitPath = (p: string) => p.split('/').filter((i) => !!i)
 
 interface RootMutate {
   /**
@@ -90,6 +89,7 @@ interface RootMutate {
    * @param op original path of file
    * @param np new path of file
    * @param r whether to recursively create new path
+   * @param d whether to delete old file
    * @returns {Promise<boolean>} success value
    */
   moveFile: (op: string, np: string, r?: boolean, d?: boolean) => Promise<boolean>
@@ -98,9 +98,10 @@ interface RootMutate {
    * @param op original path of folder
    * @param np new path of folder
    * @param r whether to recursively create new path
+   * @param d whether to delete old folder
    * @returns {Promise<boolean>} success value
    */
-  moveFolder: (op: string, np: string, r?: boolean) => Promise<boolean>
+  moveFolder: (op: string, np: string, r?: boolean, d?: boolean) => Promise<boolean>
   /**
    * determines if path already exist in structure
    * @param p path of interest
@@ -123,7 +124,6 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
   createTree: async () => {
     const opfsRoot = get().opfsRoot
     if (!opfsRoot) return
-
     const generateTree = async (
       directoryHandle: FileSystemDirectoryHandle,
       files: string[] = [],
@@ -155,8 +155,6 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
     const [files, folders, tree, treeObject] = await generateTree(opfsRoot)
     tree.sort((a) => (a.type === 'folder' ? -1 : 0))
 
-    console.log(treeObject)
-    console.log(tree)
     set({
       fileTree: tree,
       fileTreeObject: treeObject,
@@ -212,7 +210,6 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
       if (!dirHandle) return false
 
       const createMethod = type === 'file' ? 'getFileHandle' : 'getDirectoryHandle'
-      console.info('creating', itemName, 'at', itemPath, 'of', type, 'with', createMethod)
       await dirHandle[createMethod](itemName, { create: true })
 
       if (update) await createTree()
@@ -265,7 +262,6 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
     const ws = await fileHandle.createWritable()
     await ws.write(data)
     await ws.close()
-    // await createTree()
     return true
   },
   deleteItemByPath: async (path: string, update: boolean = true) => {
@@ -289,14 +285,12 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
 
     try {
       const fileText = await getFileTextByPath(oldPath)
-      // console.log(fileText)
       if (fileText === undefined) {
         console.log('could not get current file text')
         return false
       }
 
       const created = await createFileByPath(newPath, rec, false)
-      console.log('created file!!!!!!', created)
       if (!created) {
         console.log('could not create new file')
         return false
@@ -313,8 +307,13 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
       return false
     }
   },
-  moveFolder: async (oldPath: string, newPath: string, rec: boolean = false) => {
-    const { fileTreeObject, createTree, moveFile } = get()
+  moveFolder: async (
+    oldPath: string,
+    newPath: string,
+    rec: boolean = true,
+    del: boolean = true
+  ) => {
+    const { fileTreeObject, createTree, moveFile, deleteItemByPath } = get()
     const splitOldPath = splitPath(oldPath)
 
     // lets generate a list of paths we'll need to move
@@ -344,28 +343,43 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
     })
 
     // copy all new files to their new locations
+    let moveSuccess = true
     for await (const [i, p] of newChildrenPaths.entries()) {
-      await moveFile(originalChildrenPaths[i], p, true, false)
+      moveSuccess = await moveFile(originalChildrenPaths[i], p, rec, false)
+      if (!moveSuccess) return false
     }
 
-    console.log(newChildrenPaths)
-    // console.log(startingPoint)
+    if (del) await deleteItemByPath(oldPath, false)
 
     await createTree()
-    return rec
+    return true
   },
-  doesExist: (path: string, isFile: boolean = true) => {
-    const { fileListTest, folderListTest } = get()
-    const listOfInterest = isFile ? fileListTest : folderListTest
-    return listOfInterest.indexOf(path) > -1
+  doesExist: (path: string, _isFile: boolean = true) => {
+    const { fileTreeObject } = get()
+
+    const pathArr = splitPath(path)
+    const finalItem = pathArr.pop() || ''
+    let startingPoint = fileTreeObject
+    for (const item of pathArr) {
+      if (!startingPoint) return false
+      startingPoint = (startingPoint[item] as FolderObject)?.children || {}
+    }
+
+    return !!startingPoint[finalItem]
   }
 }))
 
 export default function useFileSystem() {
   const { opfsRoot, initalizeRoot: initRoot, createTree, ...rest } = useRootStore()
+  const [isAvailable, setIsAvailable] = useState(false)
   const [isReady, setIsReady] = useState(false)
 
   useMount(() => {
+    if (navigator.storage) setIsAvailable(true)
+  })
+
+  useEffect(() => {
+    if (!isAvailable) return
     if (opfsRoot) {
       setIsReady(true)
       return
@@ -379,7 +393,7 @@ export default function useFileSystem() {
     }
 
     init()
-  })
+  }, [isAvailable])
 
   return { isReady, createTree, ...rest }
 }

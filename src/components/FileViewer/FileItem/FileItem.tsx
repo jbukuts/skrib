@@ -5,33 +5,31 @@ import { Item, ItemParams, ItemProps, Separator, useContextMenu } from 'react-co
 import { VscFile } from 'react-icons/vsc'
 import { Stack } from '@/components/UI/Layout'
 import { LOCAL_STORAGE_MAP } from '@/constants'
-import { useCurrentFile, useNamedFile } from '@/hooks'
+import { useFileSystem } from '@/hooks'
 import FileContextMenu from '../FileContextMenu'
-import styles from './FileItem.module.scss'
+import styles from '../SharedItem.module.scss'
 import 'react-contexify/ReactContexify.css'
 
 const NewFileInput = lazy(() => import('../NewFileInput'))
 
-const { currentFile: currentFileKey } = LOCAL_STORAGE_MAP
+const { currentFile: currentFileKey, localText: localTextKey } = LOCAL_STORAGE_MAP
 
 interface FileItemProps {
   fileName: string
   path: string
   rename?: boolean
-  depth?: number
 }
 
 export default function FileItem(props: FileItemProps) {
-  const { fileName = '', path, depth = 0 } = props
+  const { fileName = '', path } = props
   const [renaming, setRenaming] = useState<boolean>(false)
-  const [_, setCurrentFile] = useLocalStorage<string>(currentFileKey)
+  const [currentFilePath, setCurrentFilePath] = useLocalStorage<string>(currentFileKey)
   const { show } = useContextMenu({
     id: fileName
   })
 
   // file handlers
-  const { currentFileName, saveCurrentFile, doesExist: doesCurrentExist } = useCurrentFile()
-  const { deleteFile, moveFile } = useNamedFile(path)
+  const { deleteItemByPath, moveFile, writeToFileByPath, doesExist } = useFileSystem()
 
   const handleContextMenu = (event: React.MouseEvent) => {
     show({
@@ -44,14 +42,15 @@ export default function FileItem(props: FileItemProps) {
 
   // handle swapping current file
   const openFile = async () => {
-    if (path == currentFileName) return
-    if (!currentFileName || !doesCurrentExist) {
-      setCurrentFile(path)
+    if (path == currentFilePath) return
+    if (!currentFilePath || !doesExist(currentFilePath)) {
+      setCurrentFilePath(path)
       return
     }
 
-    saveCurrentFile().then((success) => {
-      if (success) setCurrentFile(path)
+    const text = JSON.parse(localStorage.getItem(localTextKey) || '')
+    writeToFileByPath(currentFilePath, text).then((success) => {
+      if (success) setCurrentFilePath(path)
     })
   }
 
@@ -59,9 +58,9 @@ export default function FileItem(props: FileItemProps) {
   const handlerMap: Record<string, () => void> = {
     delete: async () => {
       // delete file
-      const deleteSuccess = await deleteFile()
+      const deleteSuccess = await deleteItemByPath(path)
       if (!deleteSuccess) return
-      setCurrentFile('')
+      setCurrentFilePath('')
     },
     rename: async () => {
       setRenaming(true)
@@ -80,19 +79,20 @@ export default function FileItem(props: FileItemProps) {
     pathSplit[pathSplit.length - 1] = `${newName}.md`
     const newPath = pathSplit.join('/')
 
-    moveFile(newPath).then((success) => {
+    moveFile(path, newPath).then((success) => {
       if (!success) {
-        setCurrentFile('')
+        setCurrentFilePath('')
         setRenaming(false)
         return
       }
       console.log('rename successful')
-      setCurrentFile(newPath)
+      setCurrentFilePath(newPath)
       setRenaming(false)
     })
   }
 
-  const fileItemClass = cx(styles.fileItem, currentFileName === path && styles.activeFile)
+  const isCurrentFile = currentFilePath === path
+  const fileItemClass = cx(styles.item, isCurrentFile && styles.activeItem)
 
   return (
     <>
@@ -109,11 +109,8 @@ export default function FileItem(props: FileItemProps) {
       {!renaming && (
         <div onClick={openFile} className={fileItemClass} onContextMenu={handleContextMenu}>
           {!renaming && fileName && (
-            <Stack
-              dir='horizontal'
-              spacing='sm'
-              style={{ alignItems: 'center', paddingLeft: `${depth}rem` }}>
-              <VscFile></VscFile>
+            <Stack dir='horizontal' spacing='sm' style={{ alignItems: 'center' }}>
+              <VscFile className={cx(styles.itemIcon, isCurrentFile && styles.activeIcon)} />
               <span>{fileName}</span>
             </Stack>
           )}

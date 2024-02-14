@@ -9,7 +9,6 @@ export default function useNamedFile(filePath: string) {
     if (!isReady) return
 
     getFileByPath(filePath).then((handle) => {
-      console.log('got the file', filePath)
       setCurrentFile(handle)
     })
   }, [isReady, filePath])

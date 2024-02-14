@@ -6,6 +6,12 @@
   background-color: get-color('fileview-background');
   position: sticky;
   top: $header-height;
+  overflow-x: hidden;
+
+  --line-hover-color: transparent;
+  &:hover {
+    --line-hover-color: #{get-color('fileitem-foreground', 0.5)};
+  }
 }
 
 .handle {

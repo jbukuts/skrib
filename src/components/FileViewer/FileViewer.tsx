@@ -28,10 +28,10 @@ function FileTree(props: FileTreeProps) {
         const { name, type, fullPath } = item
         const isFolder = type == 'folder'
 
-        if (!isFolder) return <FileItem depth={depth} path={fullPath} key={name} fileName={name} />
+        if (!isFolder) return <FileItem path={fullPath} key={name} fileName={name} />
 
         return (
-          <FolderItem key={name} name={name} depth={depth} path={fullPath}>
+          <FolderItem key={name} name={name} path={fullPath}>
             <FileTree tree={item.children} depth={depth + 1}></FileTree>
           </FolderItem>
         )
@@ -89,6 +89,7 @@ export default function FileViewer() {
           <FileTree tree={fileTree}></FileTree>
           {creatingItem && (
             <NewFileInput
+              adornment={creatingItem === 'file' ? VscNewFile : VscNewFolder}
               type={creatingItem}
               handleEnter={handleCreateEnter}
               handleBlur={() => setCreatingItem(undefined)}

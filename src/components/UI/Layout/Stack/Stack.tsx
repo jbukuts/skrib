@@ -29,8 +29,8 @@ function Stack(props: StackProps, ref: ForwardedRef<HTMLElement>) {
     ...rest
   } = props
   const directionStyle = `${dirMap[dir]}${reverse ? '-reverse' : ''}`
-
   const stackClass = cx(styles[spacing], className)
+  const { display, ...inlineStyles } = style
 
   return createElement(
     as,
@@ -40,8 +40,8 @@ function Stack(props: StackProps, ref: ForwardedRef<HTMLElement>) {
       ref,
       autoFocus,
       style: {
-        ...style,
-        display: 'flex',
+        ...inlineStyles,
+        display: display || 'flex',
         flexDirection: directionStyle as React.CSSProperties['flexDirection']
       }
     },
