@@ -7,7 +7,7 @@ const handleSaveFile: keyboardJs.Callback = async (e) => {
   if (!e) return
   e.preventDefault()
   // TODO: Save file logic if file picker not available
-  console.log('saving file')
+  console.log('saving file to disk!')
 
   const today = new Date().toDateString().replace(/\s/gi, '-')
   const fileName = `${today}_skrib.md`

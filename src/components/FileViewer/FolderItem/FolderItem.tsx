@@ -55,7 +55,9 @@ export default function FolderItem(props: FolderItemProps) {
     },
     delete: () => {
       // TODO: change active file if it was in folder
-      deleteItemByPath(path)
+      deleteItemByPath(path).then((success) => {
+        if (success && currentFilePath.startsWith(path)) setCurrentFilePath('')
+      })
     }
   }
 
@@ -84,10 +86,8 @@ export default function FolderItem(props: FolderItemProps) {
 
     // time to move!
     moveFolder(path, newPath).then((success) => {
-      console.log(`folder rename was ${success}`)
       if (!success) return
       if (currentFileNewPath !== currentFilePath) {
-        console.log(currentFileNewPath)
         setCurrentFilePath(currentFileNewPath)
       }
     })
@@ -98,8 +98,6 @@ export default function FolderItem(props: FolderItemProps) {
     if (!creatingItem) return
     if (creatingItem === 'file') newName = `${newName}.md`
     const newPath = [path, newName].join('/')
-    console.log('creating', newPath)
-
     const createFunc = creatingItem === 'file' ? createFileByPath : createFolderByPath
     createFunc(newPath)
   }

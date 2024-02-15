@@ -81,7 +81,6 @@ function App() {
     }
     const saveFile = async () => {
       await writeToFileByPath(currentFilePath, localText)
-      console.log('saved file!')
     }
 
     saveFile()
@@ -89,7 +88,6 @@ function App() {
 
   // handle file changes
   useEffect(() => {
-    console.log(currentFilePath)
     if (!currentFilePath) return
     getFileTextByPath(currentFilePath).then((t) => {
       if (t === undefined) return

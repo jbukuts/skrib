@@ -6,8 +6,6 @@ export default function MorphSwitch() {
   const a = FaCode({}).props.children[0].props['d']
   const b = FaAlignLeft({}).props.children[0].props['d']
 
-  console.log(FaAlignLeft({}).props)
-
   const x = splitPathString(a)
   const y = splitPathString(b).slice(0, 3)
 

@@ -3,8 +3,6 @@ import { useMount } from 'react-use'
 import { create } from 'zustand'
 import { splitPath } from '@/helpers/common'
 
-navigator.storage.getDirectory()
-
 type FileItem = { name: string; type: 'file'; fullPath: string }
 type FolderItem = { name: string; type: 'folder'; fullPath: string; children: Tree }
 export type Tree = (FileItem | FolderItem)[]
@@ -111,7 +109,7 @@ interface RootMutate {
   doesExist: (p: string, is?: boolean) => boolean
 }
 
-const useRootStore = create<RootState & RootMutate>((set, get) => ({
+export const useRootStore = create<RootState & RootMutate>((set, get) => ({
   opfsRoot: undefined,
   folderListTest: [],
   fileListTest: [],
@@ -163,19 +161,12 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
     })
   },
   getFileTextByPath: async (path: string) => {
-    const { opfsRoot } = get()
+    const { getFileByPath } = get()
 
-    const pathSplit = path.split('/').filter((i) => !!i)
-    const fileName = pathSplit.pop() as string
+    const fileHandle = await getFileByPath(path)
+    if (!fileHandle) return undefined
 
-    let dirHandle = opfsRoot
-    for await (const name of pathSplit) {
-      if (!dirHandle) return undefined
-      dirHandle = await dirHandle?.getDirectoryHandle(name, { create: false })
-    }
-
-    const fileHande = await dirHandle?.getFileHandle(fileName, { create: false })
-    const file = await fileHande?.getFile()
+    const file = await fileHandle.getFile()
     const text = await file?.text()
     return text
   },
@@ -233,7 +224,6 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
     try {
       const filePath = splitPath(path)
       const fileName = filePath.pop()
-
       if (!fileName) return undefined
 
       const dirHandle = await getDirHandleByPath(filePath)
@@ -248,17 +238,16 @@ const useRootStore = create<RootState & RootMutate>((set, get) => ({
     }
   },
   writeToFileByPath: async (path: string, data: string) => {
-    const { getDirHandleByPath } = get()
+    const { getFileByPath } = get()
 
     const filePath = splitPath(path)
     const fileName = filePath.pop()
 
     if (!fileName) return false
-    const dirHandle = await getDirHandleByPath(filePath)
 
-    if (!dirHandle) return false
+    const fileHandle = await getFileByPath(path)
+    if (!fileHandle) return false
 
-    const fileHandle = await dirHandle.getFileHandle(fileName, { create: false })
     const ws = await fileHandle.createWritable()
     await ws.write(data)
     await ws.close()
