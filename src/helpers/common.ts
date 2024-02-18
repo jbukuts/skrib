@@ -22,3 +22,29 @@ export const clamp = (v: number, min: number, max: number) => Math.min(Math.max(
  * @returns {string[]}
  */
 export const splitPath = (p: string) => p.split('/').filter((i) => !!i)
+
+/**
+ * helper to return inline css property for theme color
+ * @param name color name
+ * @param opacity desired opacity of color
+ * @returns {string} string of css property
+ */
+export const getColor = (name: string, opacity: number = 1) =>
+  `rgba(var(--color-${name}), ${opacity})`
+
+/**
+ * helper to mix theme colors
+ * @param colorOne first color to mix from theme colors
+ * @param colorTwo second color to mix from theme colors
+ * @param p1 percentage to apply to mix for first color
+ * @param p2 percentage to apply to mix for second color
+ * @returns {string} mixed color css propery
+ */
+export const mixColors = (colorOne: string, colorTwo: string, p1: number = 50, p2: number = 50) => {
+  return `color-mix(in srgb, ${getColor(colorOne)} ${p1}%, ${getColor(colorTwo)} ${p2}%)`
+}
+
+export const getCSSProperty = (prop: string) => {
+  const doc = document.documentElement
+  return getComputedStyle(doc).getPropertyValue(prop)
+}

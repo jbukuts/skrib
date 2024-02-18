@@ -10,10 +10,8 @@
 }
 
 .cm-editor {
-  height: 100%;
+  height: calc(100vh - $header-height);
   position: relative;
-  //max-height: 100vw;
-  // background-color: get-color('background');
   color: get-color('foreground');
   background-color: transparent;
 
@@ -66,17 +64,14 @@
     top: $header-height !important;
     background-color: transparent;
     border-bottom: none;
-    // border-bottom: 2px solid get-color('accent');
-    // padding: 0.275rem;
     z-index: 4;
     color: get-color('foreground');
   }
 
   & .cm-panels-bottom {
-    background-color: get-color('background', 0.35);
+    background-color: get-color('background');
     color: get-color('foreground');
     border-top: 2px solid get-color('border');
-    @include cross-backdrop-filter(blur(5px))
   }
 
   &.cm-focused {

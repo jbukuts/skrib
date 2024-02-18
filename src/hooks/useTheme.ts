@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { getCSSProperty } from '@/helpers/common'
 import { useUserSettings } from '.'
 
 export default function useTheme() {
@@ -8,15 +9,11 @@ export default function useTheme() {
   useEffect(() => {
     const html: HTMLElement = document.getElementsByTagName('html')[0]
     html.setAttribute('data-theme', theme)
-
-    // TODO: Bad way to do this dont like it
-    html.style.colorScheme = theme
+    html.style.colorScheme = getCSSProperty('--color-scheme')
 
     const metaElement = document.querySelectorAll('meta[name="theme-color"]')
     if (metaElement.length > 0) {
-      const themeColor = getComputedStyle(document.documentElement).getPropertyValue(
-        '--color-background'
-      )
+      const themeColor = getCSSProperty('--color-background')
       metaElement[0].setAttribute('content', `rgb(${themeColor})`)
     }
   }, [theme])
