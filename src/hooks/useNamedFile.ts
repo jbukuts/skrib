@@ -1,29 +1,26 @@
 import { useEffect, useState } from 'react'
 import { useFileSystem } from '.'
 
-export default function useNamedFile(fileName: string) {
-  const { fileList, isReady, writeToFile, deleteFile, renameFile } = useFileSystem()
+export default function useNamedFile(filePath: string) {
+  const { isReady, writeToFileByPath, deleteItemByPath, moveFile, getFileByPath } = useFileSystem()
   const [currentFile, setCurrentFile] = useState<FileSystemFileHandle | undefined>()
 
   useEffect(() => {
     if (!isReady) return
 
-    const index = fileList
-      .filter((n) => n.kind === 'file')
-      .map((f) => f.name)
-      .indexOf(fileName)
-
-    if (index !== -1) setCurrentFile(fileList[index] as FileSystemFileHandle)
-  }, [fileList, isReady, fileName])
+    getFileByPath(filePath).then((handle) => {
+      setCurrentFile(handle)
+    })
+  }, [isReady, filePath])
 
   return {
     doesExist: currentFile !== undefined,
-    renameFile: (newName: string) => {
-      return renameFile(fileName, newName)
+    moveFile: (newPath: string) => {
+      return moveFile(filePath, newPath)
     },
     writeToFile: async (text: string) => {
-      return writeToFile(fileName, text)
+      return writeToFileByPath(filePath, text)
     },
-    deleteFile: async () => deleteFile(fileName)
+    deleteFile: async () => deleteItemByPath(filePath)
   }
 }

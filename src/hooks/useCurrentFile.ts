@@ -7,9 +7,10 @@ const { currentFile: currentFileKey, localText: localTextKey } = LOCAL_STORAGE_M
 export default function useCurrentFile() {
   const [currentFile, setCurrentFile] = useLocalStorage<string>(currentFileKey)
   const [localText] = useLocalStorage<string>(localTextKey)
-  const { writeToFile } = useNamedFile(currentFile)
+  const { writeToFile, doesExist } = useNamedFile(currentFile)
 
   return {
+    doesExist,
     currentFileName: currentFile,
     setCurrentFile,
     saveCurrentFile: () => writeToFile(localText),
