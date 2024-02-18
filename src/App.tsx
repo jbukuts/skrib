@@ -115,7 +115,7 @@ function App() {
     <>
       <TopBar />
       <Stack spacing='none' style={{ width: '100%', flex: '1' }}>
-        {fileView && isReady && <FileViewer />}
+        <FileViewer show={fileView && isReady} />
         <CodeMirrorEditor
           className={showPreview || currentFilePath === '' ? 'hide-me' : ''}
           code={localText}

@@ -1,9 +1,10 @@
 .folderLine {
   background-color: var(--line-hover-color);
   width: 1px;
-  margin-left: 12px;
+  margin-left: 11px;
   margin-right: 4px;
   z-index: 4;
+  flex-shrink: 0;
 
   transition: background-color 125ms ease-in-out;
 }

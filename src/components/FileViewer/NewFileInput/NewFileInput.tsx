@@ -14,6 +14,7 @@ interface NewFileItemProps {
   handleEnter: (_s: string) => void
 }
 
+const ICON_SIZE = 12
 const VALID_FILE_REGEX = new RegExp(/^([a-z0-9]|_|-|\s)+$/i)
 const ERROR_REASONS = {
   duplicate: 'A file by the this name already exists.',
@@ -71,7 +72,7 @@ export default function NewFileInput(props: NewFileItemProps) {
 
   return (
     <Input
-      startAdornment={createElement(adornment)}
+      startAdornment={createElement(adornment, { size: ICON_SIZE })}
       className={styles.renameInput}
       error={badName}
       autoFocus

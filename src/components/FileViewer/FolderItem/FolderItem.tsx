@@ -14,6 +14,8 @@ import folderStyles from './FolderItem.module.scss'
 
 const { currentFile: currentFileKey } = LOCAL_STORAGE_MAP
 
+const ICON_SIZE = 12
+
 interface FolderItemProps {
   path: string
   name: string
@@ -103,7 +105,7 @@ export default function FolderItem(props: FolderItemProps) {
   }
 
   return (
-    <Stack dir='vertical' spacing='none'>
+    <Stack dir='vertical' spacing='none' id='folder-container' style={{ flex: '1' }}>
       {!renaming && (
         <Stack
           dir='horizontal'
@@ -112,7 +114,8 @@ export default function FolderItem(props: FolderItemProps) {
           onClick={() => setShowChildren((c) => !c)}
           onContextMenu={handleContextMenu}>
           {createElement(showChildren ? VscFolderOpened : VscFolder, {
-            className: cx(styles.itemIcon, showChildren && styles.activeIcon)
+            className: cx(styles.itemIcon, showChildren && styles.activeIcon),
+            size: ICON_SIZE
           })}
           {name}
         </Stack>
@@ -124,12 +127,9 @@ export default function FolderItem(props: FolderItemProps) {
           handleBlur={() => setRenaming(false)}
           handleEnter={handleRenameEnter}></NewFileInput>
       )}
-      <Stack
-        dir='horizontal'
-        style={{ display: showChildren ? '' : 'none', width: '100%' }}
-        spacing='none'>
+      <Stack dir='horizontal' style={{ display: showChildren ? '' : 'none' }} spacing='none'>
         <div className={folderStyles.folderLine} />
-        <div style={{ flex: '1' }}>
+        <div id='folder-contents' style={{ flex: '1', minWidth: '0' }}>
           {children}
           {creatingItem && (
             <NewFileInput

@@ -8,21 +8,21 @@ It is also installable as a PWA so you can also write offline if needed.
 
 ## File management
 
-All files in Skrib are stored locally using the Origin Private File System ([OPFS](https://google.com)) and thus are real files stored on the disk. They, however, are still subject to being lost if you clear all browsing data so do be careful.
+All files in Skrib are stored locally using the Origin Private File System ([OPFS](https://google.com)) and thus are real files stored on the disk. Unlike normal files on your computer they aren't directly accessible via the file explorer but rather allocated via the File System API of the browser. Because of this they are still subject to being lost if you clear all browsing data so do be careful.
 
-Files **_do autosave_** while you're writing as well. No need to manually save when working on a document.
+Files **_will_ autosave** while you're writing as well. No need to manually save when working on a document.
 
 The file management logic is handled via a custom React hook I wrote. If you're interested in verifying the source code yourself it is accessible [here]().
 
 ### Naming conventions
 
-The OPFS does not allow for files and folders at the same directory level to be named the same. Not sure as to the reasoning but my assumption is since the `removeEntry` function for `FileSystemDirectoryHandle` objects acts on both directories and files they didn't want confusion and simply dissallowed it outright.
+The OPFS does not allow for files and folders at the same directory level to be named the same. Though I am not sure of the exact reasoning for this my assumption is that since the `removeEntry` function for `FileSystemDirectoryHandle` objects acts on both folders and files this creates an issue where it can't create a distinction between the two.
 
-To circumvent this I simply append every file with `.md` under the hood. I also opted to disallow file/folder names to contain anything but alphanumeric characters, a hyphen, or an underscore.
+To circumvent this I simply append every file created/renamed with `.md` under the hood. I also opted to disallow file/folder names to contain anything but alphanumeric characters, a hyphen, or an underscore.
 
 _TL;DR Files will be appended with `.md` always, you can only name files/folders with alphanumeric characters, a hyphen, or an underscore_
 
-### Renaming files/folders (Rant)
+### Renaming files/folders
 
 Currently the OPFS has no support for renaming files or folders natively. There is a [current proposal]() to implement the feature, however, as of now (Feb 2024) it has yet to be added. In spite of this I have gerryrigged the ability to rename files by:
 
@@ -37,7 +37,9 @@ This is all fine and dandy for singular files. But applying the same approach to
 
 One day, I hope that OPFS has a native and safer solution, but for the time being the option is there and the deletion of your data won't occur unless the copying action itself succeeds first.
 
-Theoretically I could overcomplicate the design by having all files at the root level and instead pretend there are real folders with some weird logic to pretend. But that creates it's own jank that isn't really maintainable and could lead to insane file name lengths (which might have a limited length) depending on the folder structure.
+Theoretically I could overcomplicate the design by having all files at the root level and instead pretend there are real folders with some weird custom logic. But that creates it's own jank that isn't really maintainable and could lead to insane file name lengths (which might have a limited length) depending on your folder structure.
+
+I'd much rather hold out hope for improvement to the OPFS to be made and have the UI of the application mirror the real state of the file system.
 
 _TL;DR Files **are** renamable, Folders **probably should not be** but the option is there for completeness_
 
@@ -58,8 +60,7 @@ There's a lot I'd like to do with this project. Some features that are in the pi
 - Executing code blocks in preview mode (for Python and JavaScript)
 - Local file system access
 - Custom user themes
-- User-defined keybindings
-- User-defined linting rules
+- Best practice linting
 - Possible user imported fonts
 
 Be sure to star the repo and watch for future releases.
@@ -68,10 +69,4 @@ If there's a feature you're looking for that's not listed above feel free to ope
 
 ## Found a bug?
 
-Skrib is still in active development and thus bugs are prone to be found. Be mindful of this while using the application currently and if you encounter any feel free to open an issue in the [repo](https://github.com/jbukuts/skrib)
-
-## Last thoughts
-
-If you enjoy using Skrib and feel so inclined. It would be much appreciated. Though this editor was written I hope you find some utility.
-
-That's all. Enjoy writing!
+Skrib is still in active development and thus bugs are prone to be found. Be mindful of this while using the application currently and if you encounter any feel free to open an issue in the [repo](https://github.com/jbukuts/skrib) and tag it as a `user bug`.

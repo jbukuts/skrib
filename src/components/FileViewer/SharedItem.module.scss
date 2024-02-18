@@ -4,15 +4,21 @@
 
 .item {
   position: relative;
-  padding: 0.375rem;
+  padding: 0.175rem 0.375rem;
   font-family: 'JetBrains Mono Variable';
-  font-size: 0.875rem;
+  font-size: 0.775rem;
   overflow: hidden;
   color: get-color('fileitem-foreground');
   align-items: center;
   overflow: visible;
   z-index: 0;
   user-select: none;
+  
+  & span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
   &::after {
     content: '';
@@ -42,6 +48,7 @@
 .itemIcon {
   opacity: .65;
   transition: opacity 75ms ease-in-out;
+  flex-shrink: 0;
 
   &.activeIcon {
     opacity: 1;

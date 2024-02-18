@@ -1,12 +1,12 @@
 .renameInput {
   width: 100%;
-  border-left: none;
   border-right: none;
   padding-left: 0.375rem;
   
   & input {
     width: 100%;
-    font-size: 0.875rem;
+    font-size: 0.775rem;
+    padding: 0.175rem;
     font-family: 'JetBrains Mono Variable';
   }
 }

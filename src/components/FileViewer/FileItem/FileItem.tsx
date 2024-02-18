@@ -11,8 +11,9 @@ import styles from '../SharedItem.module.scss'
 import 'react-contexify/ReactContexify.css'
 
 const NewFileInput = lazy(() => import('../NewFileInput'))
-
 const { currentFile: currentFileKey, localText: localTextKey } = LOCAL_STORAGE_MAP
+
+const ICON_SIZE = 12
 
 interface FileItemProps {
   fileName: string
@@ -107,12 +108,20 @@ export default function FileItem(props: FileItemProps) {
         </Suspense>
       )}
       {!renaming && (
-        <div onClick={openFile} className={fileItemClass} onContextMenu={handleContextMenu}>
+        <Stack
+          dir='horizontal'
+          spacing='sm'
+          onClick={openFile}
+          className={fileItemClass}
+          onContextMenu={handleContextMenu}>
           {!renaming && fileName && (
-            <Stack dir='horizontal' spacing='sm' style={{ alignItems: 'center' }}>
-              <VscFile className={cx(styles.itemIcon, isCurrentFile && styles.activeIcon)} />
+            <>
+              <VscFile
+                size={ICON_SIZE}
+                className={cx(styles.itemIcon, isCurrentFile && styles.activeIcon)}
+              />
               <span>{fileName}</span>
-            </Stack>
+            </>
           )}
           <FileContextMenu id={fileName}>
             <Item id='rename' onClick={handleItemClick}>
@@ -126,7 +135,7 @@ export default function FileItem(props: FileItemProps) {
               Delete File
             </Item>
           </FileContextMenu>
-        </div>
+        </Stack>
       )}
     </>
   )

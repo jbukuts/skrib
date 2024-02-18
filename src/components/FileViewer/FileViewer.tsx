@@ -40,7 +40,13 @@ function FileTree(props: FileTreeProps) {
   )
 }
 
-export default function FileViewer() {
+interface FileViewerProps {
+  show: boolean
+}
+
+export default function FileViewer(props: FileViewerProps) {
+  const { show } = props
+
   const [size, setSize] = useState<ResizeCallbackData['size']>({ width: 250, height: Infinity })
   const [creatingItem, setCreatingItem] = useState<undefined | 'folder' | 'file'>(undefined)
   const { fileTree, createFileByPath, createFolderByPath, createTree } = useFileSystem()
@@ -75,7 +81,7 @@ export default function FileViewer() {
       axis='x'
       width={size.width}
       onResize={onResize}
-      handle={<div className={styles.handle}></div>}>
+      handle={<div className={styles.handle} />}>
       <Stack
         onContextMenu={(e) => {
           e.preventDefault()
@@ -83,7 +89,8 @@ export default function FileViewer() {
         dir='vertical'
         className={styles.fileViewer}
         style={{
-          width: `${size.width}px`
+          width: `${size.width}px`,
+          display: show ? 'flex' : 'none'
         }}>
         <Stack dir='vertical' spacing='none'>
           <FileTree tree={fileTree}></FileTree>

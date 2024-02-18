@@ -1,4 +1,14 @@
 .preview {
+  & * {
+    word-break: normal;
+    white-space: normal;
+  }
+
+  & code {
+    width: 100%;
+    overflow-x: scroll
+  }
+
   padding: 1.25rem;
   flex: 1;
 
