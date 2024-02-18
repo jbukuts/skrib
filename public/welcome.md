@@ -1,4 +1,4 @@
-# Welcome to Skrib (W.I.P)
+# Welcome
 
 Skrib is a web-based editor/previewer built specifically for Markdown.
 
@@ -43,14 +43,24 @@ I'd much rather hold out hope for improvement to the OPFS to be made and have th
 
 _TL;DR Files **are** renamable, Folders **probably should not be** but the option is there for completeness_
 
+## User settings
+
+User settings are maintained between sessions via the the `localStorage` API.
+
 ## Technologies used
 
 Skrib is built on top of these existing projects:
 
-- React
-- CodeMirror
-- marked.js
-- zustand
+- `codemirror` - code editor
+- `unified` - preview generation
+  - with `remark` and `rehype` - customizability of ouput
+- `zustand` - global state managment
+- `@mui/base` - UI elements
+- `react-contexify` - context menus
+- `usehooks` - hooks I didn't want to write
+- `fontsource` - fonts
+
+...and various [others](https://github.com/jbukuts/skrib/blob/main/package.json)
 
 ## Planned features
 
@@ -65,8 +75,8 @@ There's a lot I'd like to do with this project. Some features that are in the pi
 
 Be sure to star the repo and watch for future releases.
 
-If there's a feature you're looking for that's not listed above feel free to open an issue in the repository and tag it as a `suggestion`.
+If there's a feature you're looking for that's not listed above feel free to open an [issue](https://github.com/jbukuts/skrib/issues) in the repository and tag it as a `suggestion`.
 
 ## Found a bug?
 
-Skrib is still in active development and thus bugs are prone to be found. Be mindful of this while using the application currently and if you encounter any feel free to open an issue in the [repo](https://github.com/jbukuts/skrib) and tag it as a `user bug`.
+Skrib is still in active development and thus bugs are prone to be found. Be mindful of this while using the application currently and if you encounter any feel free to open an issue in the [repo](https://github.com/jbukuts/skrib/issues) and tag it as a `user bug`.

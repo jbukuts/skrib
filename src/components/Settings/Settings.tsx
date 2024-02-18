@@ -1,4 +1,5 @@
 import {
+  ColorHeadingSwitch,
   CursorBlinkSwitch,
   CursorMoveSwitch,
   FontFaceSelect,
@@ -8,10 +9,15 @@ import {
   ResetButton,
   StatisticsSwitch,
   ThemeSelect,
+  UnderlineHeadingSwitch,
   VariableHeadSwitch
 } from '@/components/DerivedUI'
 import { Grid, Stack } from '@/components/UI/Layout'
 import styles from './Settings.module.scss'
+
+function SubHeading(props: { children: React.ReactNode }) {
+  return <h4 style={{ margin: '0' }}>{props.children}</h4>
+}
 
 export default function Settings() {
   return (
@@ -20,13 +26,32 @@ export default function Settings() {
       <FontFaceSelect />
       <FontSizeSlider />
       <LineHeightSlider />
-      <Grid col={2} row={3} spacing='lg'>
-        <StatisticsSwitch />
-        <LineNumberSwitch />
-        <CursorBlinkSwitch />
-        <CursorMoveSwitch />
-        <VariableHeadSwitch />
-      </Grid>
+
+      <Stack dir='vertical'>
+        <SubHeading>General</SubHeading>
+        <Grid col={2}>
+          <StatisticsSwitch />
+          <LineNumberSwitch />
+        </Grid>
+      </Stack>
+
+      <Stack dir='vertical'>
+        <SubHeading>Cursor</SubHeading>
+        <Grid col={2}>
+          <CursorBlinkSwitch />
+          <CursorMoveSwitch />
+        </Grid>
+      </Stack>
+
+      <Stack dir='vertical'>
+        <SubHeading>Headings</SubHeading>
+        <Grid col={2}>
+          <VariableHeadSwitch />
+          <ColorHeadingSwitch />
+          <UnderlineHeadingSwitch />
+        </Grid>
+      </Stack>
+
       <ResetButton></ResetButton>
     </Stack>
   )

@@ -1,0 +1,6 @@
+.scrollWrapper {
+  flex: 1;
+  overflow-y: auto;
+  height: calc(100vh - $header-height);
+  scroll-behavior: smooth;
+}

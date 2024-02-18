@@ -3,8 +3,8 @@ import { createElement } from 'react'
 import styles from '../Layout.module.scss'
 
 interface GridProps {
-  col: number
-  row: number
+  col?: number
+  row?: number
   children: React.ReactNode
   className?: string
   spacing?: 'xs' | 'sm' | 'md' | 'lg'
@@ -22,8 +22,8 @@ export default function Grid(props: GridProps) {
       className: gridClass,
       style: {
         display: 'grid',
-        gridTemplateColumns: `repeat(${col}, 1fr)`,
-        gridTemplateRows: `repeat(${row}, 1fr)`
+        gridTemplateColumns: `repeat(${col || 'auto'}, 1fr)`,
+        gridTemplateRows: `repeat(${row || 'auto'}, 1fr)`
       }
     },
     children

@@ -3,6 +3,7 @@ import { IconType } from 'react-icons'
 import { VscFile } from 'react-icons/vsc'
 import { Input } from '@/components/UI'
 import { useFileSystem } from '@/hooks'
+import { ICON_SIZE } from '../shared'
 import styles from './NewFileInput.module.scss'
 
 interface NewFileItemProps {
@@ -14,7 +15,6 @@ interface NewFileItemProps {
   handleEnter: (_s: string) => void
 }
 
-const ICON_SIZE = 12
 const VALID_FILE_REGEX = new RegExp(/^([a-z0-9]|_|-|\s)+$/i)
 const ERROR_REASONS = {
   duplicate: 'A file by the this name already exists.',

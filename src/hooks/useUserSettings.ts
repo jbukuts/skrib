@@ -23,6 +23,8 @@ export interface SettingsState {
   variableHeadings: boolean
   smoothCursorBlink: boolean
   smoothCursorMove: boolean
+  coloredHeadings: boolean
+  underlineHeadings: boolean
 }
 
 interface SettingsMutate {
@@ -41,18 +43,22 @@ interface SettingsMutate {
   setTheme: (_t: Theme) => void
   toggleSmoothCursorBlink: () => void
   toggleSmoothCursorMove: () => void
+  toggleColorHeadings: () => void
+  toggleUnderlineHeadings: () => void
 }
 
 export const DEF_SETTINGS: SettingsState = {
   fontFace: 'JetBrains Mono Variable',
-  fontSize: 16,
+  fontSize: 18,
   lineHeight: 1.6,
-  theme: 'light',
+  theme: 'dark',
   showLineCount: true,
-  showInfoPanel: true,
-  variableHeadings: false,
+  showInfoPanel: false,
+  variableHeadings: true,
   smoothCursorBlink: false,
-  smoothCursorMove: false
+  smoothCursorMove: false,
+  coloredHeadings: false,
+  underlineHeadings: true
 }
 
 export const RANGE_LINE_HEIGHT = [1, 2]
@@ -66,12 +72,6 @@ export default function useUserSettings() {
     if (typeof v === 'function') {
       const newVal = v(settings)
       setSettings({ ...settings, ...newVal })
-
-      // setSettings((oldSettings) => {
-      //   const newVal = v(oldSettings)
-      //   console.log(newVal)
-      //   return { ...oldSettings, ...newVal }
-      // })
     } else {
       setSettings({ ...settings, ...v })
     }
@@ -90,6 +90,8 @@ export default function useUserSettings() {
     toggleSmoothCursorMove: () => set((s) => ({ smoothCursorMove: !s.smoothCursorMove })),
     setArbitrary: (s: Partial<SettingsState>) => set(s),
     setTheme: (t: Theme) => set({ theme: t }),
+    toggleColorHeadings: () => set((s) => ({ coloredHeadings: !s.coloredHeadings })),
+    toggleUnderlineHeadings: () => set((s) => ({ underlineHeadings: !s.underlineHeadings })),
     resetAll: () => set(DEF_SETTINGS)
   } as SettingsMutate & SettingsState
 }

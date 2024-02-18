@@ -1,14 +1,13 @@
 import { useDebounce, useLocalStorage } from '@uidotdev/usehooks'
 import { Suspense, lazy, useCallback, useEffect } from 'react'
 import { useShallow } from 'zustand/react/shallow'
+import styles from '#styles/App.module.scss'
 import { CodeMirrorEditor, KeyCommands, TopBar } from '@/components'
 import FileViewer from '@/components/FileViewer/FileViewer'
 import { Stack } from '@/components/UI/Layout'
 import { DEF_TEXT } from '@/constants'
 import { useFileSystem, useUserSettings } from '@/hooks'
 import useEditorStateStore from '@/store/editor-state'
-import '#styles/App.scss'
-import '#styles/themes/ascetic.css'
 import useTheme from './hooks/useTheme'
 
 const Settings = lazy(() => import('@/components/Settings'))
@@ -55,7 +54,9 @@ function App() {
     variableHeadings,
     smoothCursorMove,
     smoothCursorBlink,
-    lineHeight
+    lineHeight,
+    coloredHeadings,
+    underlineHeadings
   } = useUserSettings()
 
   // handle theme changes
@@ -65,8 +66,7 @@ function App() {
   const [firstVisit, setFirstVisit] = useLocalStorage<boolean>('firsttime', true)
   const [currentFilePath, setCurrentFilePath] = useLocalStorage<string>('current_file')
 
-  const { getFileTextByPath, isReady, fileTree, createFileByPath, writeToFileByPath } =
-    useFileSystem()
+  const { getFileTextByPath, isReady, createFileByPath, writeToFileByPath } = useFileSystem()
   const debounceText = useDebounce(localText, 500)
 
   const handleTextChange = useCallback((s: string) => {
@@ -97,7 +97,7 @@ function App() {
 
   // handle initializing starting file
   useEffect(() => {
-    if (!isReady || fileTree.length > 0) return
+    if (!isReady || !firstVisit) return
 
     const createStartingFile = async () => {
       console.info('Creating welcome file!')
@@ -109,32 +109,37 @@ function App() {
     }
 
     createStartingFile()
-  }, [fileTree, isReady])
+  }, [isReady, firstVisit])
 
   return (
     <>
       <TopBar />
       <Stack spacing='none' style={{ width: '100%', flex: '1' }}>
         <FileViewer show={fileView && isReady} />
-        <CodeMirrorEditor
-          className={showPreview || currentFilePath === '' ? 'hide-me' : ''}
-          code={localText}
-          onChange={handleTextChange}
-          lineNumbers={showLineCount}
-          lineHeight={lineHeight}
-          fontSize={fontSize}
-          fontFamily={fontFace}
-          showInfoPanel={showInfoPanel}
-          variableHeadingSize={variableHeadings}
-          smoothCursorBlink={smoothCursorBlink}
-          smoothCursorMove={smoothCursorMove}
-        />
-        <Suspense fallback={null}>
-          <Preview
-            className={!showPreview || currentFilePath === '' ? 'hide-me' : ''}
+        <div className={styles.scrollWrapper}>
+          <CodeMirrorEditor
+            className={showPreview || currentFilePath === '' ? 'hide-me' : ''}
+            code={localText}
+            onChange={handleTextChange}
+            lineNumbers={showLineCount}
+            lineHeight={lineHeight}
             fontSize={fontSize}
-            rawText={localText}></Preview>
-        </Suspense>
+            fontFamily={fontFace}
+            showInfoPanel={showInfoPanel}
+            variableHeadingSize={variableHeadings}
+            smoothCursorBlink={smoothCursorBlink}
+            smoothCursorMove={smoothCursorMove}
+            coloredHeadings={coloredHeadings}
+            underlineHeadings={underlineHeadings}
+          />
+          <Suspense fallback={null}>
+            <Preview
+              className={!showPreview || currentFilePath === '' ? 'hide-me' : ''}
+              lineHeight={lineHeight}
+              fontSize={fontSize}
+              rawText={localText}></Preview>
+          </Suspense>
+        </div>
       </Stack>
 
       <Suspense fallback={null}>
@@ -147,10 +152,7 @@ function App() {
       </Suspense>
       {firstVisit && (
         <Suspense fallback={null}>
-          <NewModal
-            title='Welcome to skrib!'
-            open={firstVisit}
-            onClose={() => setFirstVisit(false)}>
+          <NewModal title='Welcome' open={firstVisit} onClose={() => setFirstVisit(false)}>
             <FirstTime />
           </NewModal>
         </Suspense>
