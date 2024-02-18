@@ -5,7 +5,7 @@
   --contexify-menu-padding: 0;
   --contexify-itemContent-padding: 0.275rem;
   --contexify-menu-shadow: 5px 5px 5px #{get-color('foreground', 0)};
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 
   border: 1px solid get-color('border');
 
@@ -13,4 +13,3 @@
     z-index: 9999 !important;
   }
 }
-

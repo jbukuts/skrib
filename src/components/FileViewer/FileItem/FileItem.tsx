@@ -7,13 +7,12 @@ import { Stack } from '@/components/UI/Layout'
 import { LOCAL_STORAGE_MAP } from '@/constants'
 import { useFileSystem } from '@/hooks'
 import FileContextMenu from '../FileContextMenu'
+import { ICON_SIZE } from '../shared'
 import styles from '../SharedItem.module.scss'
 import 'react-contexify/ReactContexify.css'
 
 const NewFileInput = lazy(() => import('../NewFileInput'))
 const { currentFile: currentFileKey, localText: localTextKey } = LOCAL_STORAGE_MAP
-
-const ICON_SIZE = 12
 
 interface FileItemProps {
   fileName: string

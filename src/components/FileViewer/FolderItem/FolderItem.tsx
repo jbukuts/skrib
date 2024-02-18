@@ -9,12 +9,11 @@ import { splitPath } from '@/helpers/common'
 import { useFileSystem } from '@/hooks'
 import FileContextMenu from '../FileContextMenu'
 import NewFileInput from '../NewFileInput'
+import { ICON_SIZE } from '../shared'
 import styles from '../SharedItem.module.scss'
 import folderStyles from './FolderItem.module.scss'
 
 const { currentFile: currentFileKey } = LOCAL_STORAGE_MAP
-
-const ICON_SIZE = 12
 
 interface FolderItemProps {
   path: string
